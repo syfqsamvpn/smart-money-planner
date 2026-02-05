@@ -93,6 +93,19 @@
                     </button>
                 </div>
 
+                <div class="glass-card rounded-2xl p-4 bg-gradient-to-br from-indigo-50 to-white border-indigo-100">
+                    <div class="flex items-center gap-2 mb-3">
+                        <div class="w-6 h-6 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
+                            <i data-lucide="briefcase" class="w-3.5 h-3.5"></i>
+                        </div>
+                        <span class="text-xs font-bold text-indigo-900 uppercase tracking-wide">Profil Pekerjaan</span>
+                    </div>
+                    <div class="flex bg-white rounded-lg p-1 border border-indigo-100 shadow-sm">
+                        <button onclick="setJobType('permanent')" id="btn-perm" class="flex-1 py-2 px-3 rounded-md text-xs font-bold transition-all bg-indigo-600 text-white shadow-sm">Tetap (Stabil)</button>
+                        <button onclick="setJobType('contract')" id="btn-cont" class="flex-1 py-2 px-3 rounded-md text-xs font-bold transition-all text-slate-500 hover:bg-slate-50">Kontrak / Freelance</button>
+                    </div>
+                </div>
+
                 <div class="glass-card rounded-2xl p-6 space-y-6">
                     <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                         <h2 class="font-bold text-slate-800 text-sm uppercase tracking-wider">Parameter Utama</h2>
@@ -177,7 +190,7 @@
                         </div>
                     </div>
 
-                    <div class="border-t border-slate-100 pt-4 relative z-10">
+                    <div class="border-t border-slate-100 pt-4 relative z-10" id="adv-settings-container">
                         <button onclick="toggleAdvanced()" class="flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-indigo-600 transition-colors w-full">
                             <i data-lucide="settings-2" class="w-3 h-3"></i>
                             Tetapan Lanjutan
@@ -186,10 +199,10 @@
                         
                         <div id="advanced-options" class="hidden mt-4 space-y-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
                             
-                            <div class="flex items-center justify-between bg-white p-2.5 rounded-lg border border-slate-200 shadow-sm">
+                            <div id="auto-match-control" class="flex items-center justify-between bg-white p-2.5 rounded-lg border border-slate-200 shadow-sm">
                                 <div class="flex flex-col">
                                     <span class="text-xs font-bold text-slate-700">Samakan Komitmen</span>
-                                    <span class="text-[10px] text-slate-400 font-medium">Jadikan ansuran A = B</span>
+                                    <span class="text-[10px] text-slate-400 font-medium">Bayar baki tunai ke Principal</span>
                                 </div>
                                 <label class="relative inline-flex items-center cursor-pointer">
                                     <input type="checkbox" id="autoMatchToggle" class="sr-only peer" onchange="toggleAutoMatch()">
@@ -198,9 +211,9 @@
                             </div>
 
                             <div>
-                                <label class="block text-xs font-semibold text-indigo-600 mb-1.5">Bayaran Ekstra Manual untuk A (RM)</label>
+                                <label class="block text-xs font-semibold text-indigo-600 mb-1.5">Bayaran Ekstra Manual (A)</label>
                                 <input type="number" id="extraPayment" placeholder="0" class="w-full px-3 py-2 bg-white border border-indigo-100 rounded-lg text-sm font-bold text-indigo-700 focus:outline-none focus:ring-1 focus:ring-indigo-500 number-font" oninput="calculate()">
-                                <p class="text-[10px] text-slate-400 mt-1">Hanya berkesan untuk pinjaman Reducing Balance.</p>
+                                <p class="text-[10px] text-slate-400 mt-1">Hanya berkesan jika Samakan Komitmen dimatikan.</p>
                             </div>
                         </div>
                     </div>
@@ -268,7 +281,7 @@
 
                             <div id="block-A-invest" class="mt-auto pt-4 border-t border-slate-100 hidden">
                                 <div class="flex justify-between items-center mb-2">
-                                    <span class="text-xs text-indigo-600 font-semibold">Hasil Pelaburan Semula</span>
+                                    <span class="text-xs text-indigo-600 font-semibold" id="lbl-A-invest">Hasil Pelaburan Semula</span>
                                     <span class="text-xs font-bold text-indigo-600 number-font" id="res-A-asb">RM 0</span>
                                 </div>
                                 <div class="h-1.5 w-full bg-indigo-100 rounded-full overflow-hidden">
@@ -355,19 +368,48 @@
                             <h3 class="font-bold text-slate-900">Unjuran Kekayaan Tahunan</h3>
                             <p class="text-xs text-slate-500">Pertumbuhan aset bersih dari tahun ke tahun.</p>
                         </div>
-                        <div class="flex gap-4 text-xs font-medium">
-                            <div class="flex items-center gap-1.5">
-                                <span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span>
-                                <span class="text-slate-600">Senario A</span>
-                            </div>
-                            <div class="flex items-center gap-1.5">
-                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-                                <span class="text-slate-600">Senario B</span>
-                            </div>
+                        <div class="flex gap-3">
+                            <button onclick="downloadCSV()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-600 text-xs font-bold hover:bg-indigo-100 transition-colors">
+                                <i data-lucide="download" class="w-3.5 h-3.5"></i> Laporan (CSV)
+                            </button>
+                            <button onclick="downloadChart()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 text-slate-600 text-xs font-bold hover:bg-slate-100 transition-colors">
+                                <i data-lucide="image" class="w-3.5 h-3.5"></i> Graf
+                            </button>
                         </div>
                     </div>
-                    <div class="h-72 w-full relative">
+                    <div class="h-72 w-full relative bg-white p-2 rounded-xl">
                         <canvas id="financeChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                    <div class="flex items-center gap-2 mb-4 pb-2 border-b border-slate-50">
+                        <i data-lucide="shield-alert" class="w-5 h-5 text-amber-500"></i>
+                        <h3 class="font-bold text-slate-900">Analisa Risiko & Kesuaian Profil</h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="space-y-3">
+                             <div class="flex items-center gap-2">
+                                <div class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center">
+                                    <i data-lucide="briefcase" class="w-3 h-3 text-slate-600"></i>
+                                </div>
+                                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wide">Risiko Kehilangan Pekerjaan</h4>
+                             </div>
+                             <p id="risk-job-text" class="text-sm text-slate-600 leading-relaxed pl-8 border-l-2 border-slate-100">
+                                Analisa sedang dimuatkan...
+                             </p>
+                        </div>
+                        <div class="space-y-3">
+                             <div class="flex items-center gap-2">
+                                <div class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center">
+                                    <i data-lucide="user-check" class="w-3 h-3 text-slate-600"></i>
+                                </div>
+                                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wide">Profil Kesuaian</h4>
+                             </div>
+                             <p id="risk-profile-text" class="text-sm text-slate-600 leading-relaxed pl-8 border-l-2 border-slate-100">
+                                Analisa sedang dimuatkan...
+                             </p>
+                        </div>
                     </div>
                 </div>
 
@@ -378,6 +420,7 @@
     <script>
         let currentLoanType = 'car'; 
         let analysisMode = 'deposit'; 
+        let currentJobType = 'permanent';
         let chartInstance = null;
 
         function toggleAdvanced() {
@@ -428,6 +471,24 @@
             calculate();
         }
 
+        function setJobType(type) {
+            currentJobType = type;
+            const btnPerm = document.getElementById('btn-perm');
+            const btnCont = document.getElementById('btn-cont');
+            
+            const activeStyle = "flex-1 py-2 px-3 rounded-md text-xs font-bold transition-all bg-indigo-600 text-white shadow-sm";
+            const inactiveStyle = "flex-1 py-2 px-3 rounded-md text-xs font-bold transition-all text-slate-500 hover:bg-slate-50";
+
+            if (type === 'permanent') {
+                btnPerm.className = activeStyle;
+                btnCont.className = inactiveStyle;
+            } else {
+                btnCont.className = activeStyle;
+                btnPerm.className = inactiveStyle;
+            }
+            calculate();
+        }
+
         function setLoanType(type) {
             currentLoanType = type;
             
@@ -444,6 +505,10 @@
                 document.getElementById('loanTenure').value = 9;
                 document.getElementById('calcMethod').value = 'flat';
                 document.getElementById('method-hint').innerText = "Biasanya Flat Rate untuk kereta";
+                
+                document.getElementById('auto-match-control').classList.add('hidden');
+                document.getElementById('autoMatchToggle').checked = false; 
+                document.getElementById('extraPayment').disabled = false;
             } else {
                 btnHouse.className = activeClass;
                 btnCar.className = inactiveClass;
@@ -452,6 +517,8 @@
                 document.getElementById('loanTenure').value = 30;
                 document.getElementById('calcMethod').value = 'reducing';
                 document.getElementById('method-hint').innerText = "Reducing Balance untuk rumah";
+                
+                document.getElementById('auto-match-control').classList.remove('hidden');
             }
             calculate();
         }
@@ -496,6 +563,7 @@
                 document.getElementById('row-B-tenure').classList.add('hidden');
                 
                 document.getElementById('block-A-invest').classList.add('hidden');
+                document.getElementById('invest-details-A').classList.add('hidden');
             } else {
                 document.getElementById('inputs-deposit-mode').classList.add('hidden');
                 document.getElementById('inputs-tenure-mode').classList.remove('hidden');
@@ -558,6 +626,49 @@
             return { monthly, totalInterest, actualMonths };
         }
 
+        function updateRiskAnalysis(monthlyA, monthlyB, mode) {
+            const riskJobEl = document.getElementById('risk-job-text');
+            const riskProfileEl = document.getElementById('risk-profile-text');
+            
+            let diff = Math.abs(monthlyA - monthlyB);
+            let lowerCommitmentLabel = monthlyA < monthlyB ? 'Strategi A (Komitmen Rendah)' : 'Strategi B (Komitmen Rendah)';
+            let higherCommitmentLabel = monthlyA > monthlyB ? 'Strategi A (Komitmen Tinggi)' : 'Strategi B (Komitmen Tinggi)';
+            
+            let isFreelance = currentJobType === 'contract';
+            
+            let textJob = "";
+            let textProfile = "";
+
+            if (mode === 'deposit') {
+                if (isFreelance) {
+                    textJob = `<span class="text-amber-600 font-bold">Perhatian Freelancer!</span> Anda perlukan tunai kecemasan. <br>
+                    <strong>Strategi B (Invest)</strong> mengekalkan tunai di tangan (ASB) yang sangat kritikal jika tiada job. Namun, komitmen bulanannya lebih tinggi.<br>
+                    Jika anda yakin boleh bayar bulanan, <strong>Strategi B</strong> lebih selamat kerana ada "Buffer Tunai". Jika risau tak mampu bayar bulanan, pilih <strong>Strategi A</strong> untuk rendahkan komitmen.`;
+                    
+                    textProfile = `Sebagai pekerja kontrak, <strong>Likuiditi (Tunai Cair)</strong> adalah raja. Strategi B memberi anda akses pantas kepada tunai pelaburan jika berlaku kecemasan, berbanding Strategi A di mana wang "terbenam" dalam aset.`;
+                } else {
+                    textJob = `<strong class="text-emerald-600">${lowerCommitmentLabel}</strong> memberikan ketenangan minda dengan bayaran bulanan rendah. <br>Namun sebagai pekerja tetap, anda mungkin lebih selesa mengambil risiko <strong>${higherCommitmentLabel}</strong> untuk memaksimumkan pelaburan tunai di tangan.`;
+                    
+                    textProfile = `Pekerja Tetap mempunyai aliran tunai stabil. Fokus anda boleh lebih kepada memaksimumkan <strong>Nilai Bersih (Net Worth)</strong> jangka panjang berbanding risaukan likuiditi jangka pendek.`;
+                }
+
+            } else {
+                if (isFreelance) {
+                    textJob = `<span class="text-rose-600 font-bold">Amaran Risiko Tinggi!</span> Elakkan <strong>Strategi A (Tempoh Pendek)</strong> kerana komitmen bulanannya sangat tinggi. Jika hilang projek, anda akan tertekan.<br>
+                    Pilih <strong>Strategi B (Tempoh Panjang)</strong> untuk rendahkan bayaran wajib. Anda boleh bayar lebih bila ada duit, tapi tak wajib.`;
+                    
+                    textProfile = `Fleksibiliti adalah kunci. Ambil tempoh panjang (B) untuk keselamatan. Gunakan lebihan pendapatan bulan-bulan "lebat" untuk simpanan sendiri, bukan terikat dengan bank.`;
+                } else {
+                    textJob = `Jika anda ada dana kecemasan 6 bulan, <strong>Strategi A (Pendek)</strong> bagus untuk bebas hutang cepat. Tapi jika ragu-ragu, ambil <strong>Strategi B (Panjang)</strong> dan laburkan bakinya secara disiplin.`;
+                    
+                    textProfile = `Untuk profil stabil, strategi agresif (A) boleh dipertimbangkan untuk menjimatkan faedah bank. Namun, strategi B memberi fleksibiliti tunai yang lebih baik untuk peluang pelaburan lain.`;
+                }
+            }
+            
+            riskJobEl.innerHTML = textJob;
+            riskProfileEl.innerHTML = textProfile;
+        }
+
         function calculate() {
             const P_asset = parseVal('assetPrice');
             const rateLoan = parseVal('loanRate');
@@ -566,6 +677,12 @@
             const minDepoPct = parseVal('minDepoPercent');
             const isAutoMatch = document.getElementById('autoMatchToggle').checked;
             
+            if (method === 'flat') {
+                document.getElementById('auto-match-control').classList.add('hidden');
+            } else {
+                document.getElementById('auto-match-control').classList.remove('hidden');
+            }
+
             let extraMonthly = 0;
             const commonTenure = parseVal('loanTenure'); 
             
@@ -612,27 +729,188 @@
                 let B_dividend = B_finalInvest - B_startInvest;
                 
                 let interestDiff = resB.totalInterest - resA.totalInterest;
-                let netWin = B_dividend - interestDiff;
+                let netWin = 0;
+
+                let A_earlyInvestVal = 0;
+                let A_earlyInvestPrinc = 0;
+                let A_totalCommitment = A_monthly + extraMonthly; 
+
+                if (method === 'reducing' && isAutoMatch && resA.actualMonths < commonTenure * 12) {
+                    let remainingMonths = (commonTenure * 12) - resA.actualMonths;
+                    let monthlyRateAsb = rateAsb / 12;
+                    
+                    for(let m=1; m <= remainingMonths; m++) {
+                        A_earlyInvestVal = A_earlyInvestVal * (1 + monthlyRateAsb);
+                        A_earlyInvestVal += A_totalCommitment;
+                        A_earlyInvestPrinc += A_totalCommitment;
+                    }
+                    
+                    A_finalInvest = A_earlyInvestVal;
+                }
+
+                if (method === 'flat') {
+                    let diffMonthly = 0;
+                    if (B_monthly > A_monthly) {
+                        diffMonthly = B_monthly - A_monthly;
+                    }
+
+                    let monthlyRateAsb = rateAsb / 12;
+                    let fundA = 0;
+                    let A_totalPrinc = 0;
+                    
+                    for (let m = 1; m <= commonTenure * 12; m++) {
+                        fundA = fundA * (1 + monthlyRateAsb);
+                        fundA += diffMonthly;
+                        A_totalPrinc += diffMonthly;
+                    }
+                    A_finalInvest = fundA;
+
+                    netWin = B_finalInvest - A_finalInvest;
+
+                    document.getElementById('res-A-initialInvest').innerText = formatRM(A_totalPrinc);
+                    document.getElementById('res-A-totalDividend').innerText = formatRM(A_finalInvest - A_totalPrinc);
+                    document.getElementById('res-A-asb').innerText = formatRM(A_finalInvest);
+                    document.getElementById('res-A-net').innerText = formatRM(A_finalInvest);
+                    
+                    document.getElementById('block-A-invest').classList.remove('hidden');
+                    document.getElementById('invest-details-A').classList.remove('hidden');
+                    document.getElementById('lbl-A-invest').innerText = "Hasil Pelaburan Lebihan";
+
+                    let monthlyTextA = formatRM(A_monthly);
+                    monthlyTextA += `<span class="text-[10px] text-indigo-600 block mt-1 text-right w-max ml-auto border-t border-indigo-100 pt-0.5">Simpan: ${formatRM(diffMonthly)} (Beza)</span>`;
+                    document.getElementById('res-A-monthly').innerHTML = monthlyTextA;
+                    document.getElementById('res-B-monthly').innerText = formatRM(B_monthly);
+                    document.getElementById('res-B-net').innerText = formatRM(B_finalInvest);
+
+                    for (let i = 0; i <= commonTenure; i++) {
+                        chartLabels.push(`Thn ${i}`);
+                        
+                        let fA = 0;
+                        for(let m=1; m<=i*12; m++) {
+                            fA = fA * (1 + monthlyRateAsb) + diffMonthly;
+                        }
+                        chartDataA.push(fA);
+
+                        let fB = B_startInvest * Math.pow(1 + rateAsb, i);
+                        chartDataB.push(fB);
+                    }
+
+                } else {
+                    if (isAutoMatch) {
+                        let valA_net = A_finalInvest - resA.totalInterest;
+                        let valB_net = B_finalInvest - resB.totalInterest;
+                        netWin = valB_net - valA_net;
+                        
+                        if (A_finalInvest > 0) {
+                            document.getElementById('block-A-invest').classList.remove('hidden');
+                            document.getElementById('lbl-A-invest').innerText = "Pelaburan Selepas Hutang";
+                            document.getElementById('res-A-asb').innerText = formatRM(A_finalInvest);
+                            document.getElementById('invest-details-A').classList.remove('hidden');
+                            document.getElementById('res-A-initialInvest').innerText = formatRM(A_earlyInvestPrinc);
+                            document.getElementById('res-A-totalDividend').innerText = formatRM(A_finalInvest - A_earlyInvestPrinc);
+                            
+                            let monthlyTextA = formatRM(A_monthly);
+                            let settleBadge = "";
+                            if (resA.actualMonths < commonTenure * 12) {
+                                const y = Math.floor(resA.actualMonths / 12);
+                                const m = Math.round(resA.actualMonths % 12);
+                                let label = y > 0 ? `${y} Tahun ` : "";
+                                label += m > 0 ? `${m} Bulan` : "";
+                                settleBadge = `<span class="text-[10px] text-emerald-600 font-bold block mt-1 text-right bg-emerald-50 rounded px-1 w-max ml-auto border border-emerald-100">Selesai: ${label}</span>`;
+                            }
+                            monthlyTextA += `<span class="text-[10px] text-indigo-600 block mt-1 text-right w-max ml-auto border-t border-indigo-100 pt-0.5">+ Extra ${formatRM(extraMonthly)}</span>`;
+                            if(settleBadge) monthlyTextA += settleBadge;
+                            monthlyTextA += `<span class="text-[10px] text-indigo-600 block mt-1 text-right w-max ml-auto border-t border-indigo-100 pt-0.5">Labur: ${formatRM(A_totalCommitment)} (Slps Lunas)</span>`;
+                            document.getElementById('res-A-monthly').innerHTML = monthlyTextA;
+                        } else {
+                             document.getElementById('block-A-invest').classList.add('hidden');
+                             updateMonthlyDisplay(A_monthly, B_monthly, extraMonthly, resA.actualMonths, resB.actualMonths, commonTenure * 12);
+                        }
+                        
+                        document.getElementById('res-A-net').innerText = formatRM(valA_net);
+                        document.getElementById('res-B-net').innerText = formatRM(valB_net);
+
+                    } else {
+                        let monthlySurplus = 0;
+                        if (B_monthly > A_monthly) {
+                            monthlySurplus = B_monthly - A_monthly;
+                        }
+                        
+                        let monthlyRateAsb = rateAsb / 12;
+                        let fundA = 0;
+                        let A_totalPrinc = 0;
+                        for (let m = 1; m <= commonTenure * 12; m++) {
+                            fundA = fundA * (1 + monthlyRateAsb);
+                            fundA += monthlySurplus;
+                            A_totalPrinc += monthlySurplus;
+                        }
+                        A_finalInvest = fundA;
+                        
+                        let valA_net = A_finalInvest - resA.totalInterest;
+                        let valB_net = B_finalInvest - resB.totalInterest;
+                        netWin = valB_net - valA_net;
+
+                        if (monthlySurplus > 0) {
+                            document.getElementById('block-A-invest').classList.remove('hidden');
+                            document.getElementById('lbl-A-invest').innerText = "Pelaburan Lebihan Tunai";
+                            document.getElementById('res-A-asb').innerText = formatRM(A_finalInvest);
+                            document.getElementById('invest-details-A').classList.remove('hidden');
+                            document.getElementById('res-A-initialInvest').innerText = formatRM(A_totalPrinc);
+                            document.getElementById('res-A-totalDividend').innerText = formatRM(A_finalInvest - A_totalPrinc);
+                            
+                            let monthlyTextA = formatRM(A_monthly);
+                            monthlyTextA += `<span class="text-[10px] text-indigo-600 block mt-1 text-right w-max ml-auto border-t border-indigo-100 pt-0.5">Simpan: ${formatRM(monthlySurplus)}/bln</span>`;
+                            document.getElementById('res-A-monthly').innerHTML = monthlyTextA;
+                        } else {
+                            document.getElementById('block-A-invest').classList.add('hidden');
+                            updateMonthlyDisplay(A_monthly, B_monthly, extraMonthly, resA.actualMonths, resB.actualMonths, commonTenure * 12);
+                        }
+                        document.getElementById('res-A-net').innerText = formatRM(valA_net);
+                        document.getElementById('res-B-net').innerText = formatRM(valB_net);
+                    }
+
+                    for (let i = 0; i <= commonTenure; i++) {
+                        chartLabels.push(`Thn ${i}`);
+                        
+                        let valA = 0;
+                        if (isAutoMatch) {
+                            let monthsPassed = i * 12;
+                            if (monthsPassed <= resA.actualMonths) {
+                                valA = -(resA.totalInterest / resA.actualMonths * monthsPassed);
+                            } else {
+                                let monthsInvested = monthsPassed - resA.actualMonths;
+                                let monthlyRateAsb = rateAsb / 12;
+                                let investVal = 0;
+                                for(let m=1; m <= monthsInvested; m++) {
+                                    investVal = investVal * (1 + monthlyRateAsb) + A_totalCommitment;
+                                }
+                                valA = investVal - resA.totalInterest;
+                            }
+                        } else {
+                            let monthlySurplus = (B_monthly > A_monthly) ? B_monthly - A_monthly : 0;
+                            let monthlyRateAsb = rateAsb / 12;
+                            let investVal = 0;
+                            for(let m=1; m <= i * 12; m++) {
+                                investVal = investVal * (1 + monthlyRateAsb) + monthlySurplus;
+                            }
+                            valA = investVal - (resA.totalInterest / commonTenure * i);
+                        }
+                        chartDataA.push(valA);
+
+                        let valB = B_startInvest * Math.pow(1 + rateAsb, i) - (resB.totalInterest / commonTenure * i);
+                        chartDataB.push(valB);
+                    }
+                }
 
                 document.getElementById('res-A-deposit').innerText = formatRM(A_depo);
                 document.getElementById('res-B-deposit').innerText = formatRM(B_depo);
                 
-                document.getElementById('res-A-net').innerText = "RM 0"; 
                 document.getElementById('res-B-initialInvest').innerText = formatRM(B_startInvest);
                 document.getElementById('res-B-totalDividend').innerText = formatRM(B_dividend);
                 document.getElementById('res-B-asb').innerText = formatRM(B_finalInvest);
-                document.getElementById('res-B-net').innerText = formatRM(B_finalInvest - interestDiff);
 
                 updateVerdict(netWin, "Strategi B (Invest)", "Strategi A (Deposit Tinggi)");
-
-                for (let i = 0; i <= commonTenure; i++) {
-                    chartLabels.push(`Thn ${i}`);
-                    chartDataA.push(-(resA.totalInterest / commonTenure * i));
-                    let valB = B_startInvest * Math.pow(1 + rateAsb, i);
-                    chartDataB.push(valB - (resB.totalInterest / commonTenure * i));
-                }
-
-                updateMonthlyDisplay(A_monthly, B_monthly, extraMonthly, resA.actualMonths, resB.actualMonths, commonTenure * 12);
+                updateRiskAnalysis(A_monthly + (isAutoMatch ? extraMonthly : 0), B_monthly, 'deposit');
                 
                 document.getElementById('res-A-loan').innerText = formatRM(A_loan);
                 document.getElementById('res-B-loan').innerText = formatRM(B_loan);
@@ -682,6 +960,7 @@
                 document.getElementById('res-A-tenure-display').innerText = A_tenure + " Thn";
                 document.getElementById('res-B-tenure-display').innerText = B_tenure + " Thn";
                 
+                document.getElementById('lbl-A-invest').innerText = "Hasil Pelaburan (Selepas Hutang)";
                 document.getElementById('res-A-initialInvest').innerText = formatRM(A_principal);
                 document.getElementById('res-A-totalDividend').innerText = formatRM(A_finalInvest - A_principal);
                 document.getElementById('res-A-asb').innerText = formatRM(A_finalInvest);
@@ -703,6 +982,7 @@
                 updateMonthlyDisplay(A_monthly, B_monthly, 0, resA.actualMonths, resB.actualMonths, B_tenure * 12, investTextA, investTextB);
 
                 updateVerdict(netWin, "Strategi B (Tempoh Panjang)", "Strategi A (Tempoh Pendek)");
+                updateRiskAnalysis(A_monthly, B_monthly, 'tenure');
 
                 for (let i = 0; i <= B_tenure; i++) {
                     chartLabels.push(`Thn ${i}`);
@@ -872,6 +1152,146 @@
                     }
                 }
             });
+        }
+
+        function downloadCSV() {
+            const P_asset = parseVal('assetPrice');
+            const rateLoan = parseVal('loanRate');
+            const method = document.getElementById('calcMethod').value;
+            const rateAsb = parseVal('asbRate') / 100;
+            const minDepoPct = parseVal('minDepoPercent');
+            const isAutoMatch = document.getElementById('autoMatchToggle').checked;
+            let extraMonthly = (method === 'reducing' && !isAutoMatch) ? parseVal('extraPayment') : 0;
+            const commonTenure = parseVal('loanTenure'); 
+            const minDepoAmount = P_asset * (minDepoPct / 100);
+
+            let A_loan, B_loan;
+            let cash = parseVal('cashOnHand');
+            let A_depo, B_depo, B_startInvest;
+            let autoExtraA = 0;
+
+            if (analysisMode === 'deposit') {
+                A_depo = Math.max(cash, minDepoAmount);
+                B_depo = minDepoAmount;
+                A_loan = Math.max(0, P_asset - A_depo);
+                B_loan = Math.max(0, P_asset - B_depo);
+                B_startInvest = Math.max(0, cash - B_depo);
+
+                if (method === 'reducing' && isAutoMatch) {
+                    const baseA = calculateMonthly(A_loan, rateLoan, commonTenure, method, 0);
+                    const baseB = calculateMonthly(B_loan, rateLoan, commonTenure, method, 0);
+                    const diff = baseB.monthly - baseA.monthly;
+                    if (diff > 0) autoExtraA = diff;
+                    extraMonthly = autoExtraA; 
+                }
+            } else {
+                let A_tenure = parseVal('shortTenure');
+                let B_tenure = commonTenure;
+                if(A_tenure >= B_tenure) A_tenure = B_tenure - 1;
+                if(A_tenure < 1) A_tenure = 1;
+                
+                A_loan = P_asset - minDepoAmount;
+                B_loan = P_asset - minDepoAmount;
+                B_startInvest = 0; 
+            }
+
+            const calcA = calculateMonthly(A_loan, rateLoan, analysisMode === 'deposit' ? commonTenure : parseVal('shortTenure'), method, extraMonthly);
+            const calcB = calculateMonthly(B_loan, rateLoan, commonTenure, method, 0);
+
+            let monthlyPaymentA = calcA.monthly + (analysisMode === 'deposit' ? extraMonthly : 0);
+            let monthlyPaymentB = calcB.monthly;
+
+            let monthlySurplusA = 0;
+            if (analysisMode === 'deposit') {
+                 if (method === 'flat' || (method === 'reducing' && !isAutoMatch)) {
+                    if (monthlyPaymentB > monthlyPaymentA) monthlySurplusA = monthlyPaymentB - monthlyPaymentA;
+                }
+            }
+
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "LAPORAN ANALISA KEWANGAN - SMART MONEY PLANNER\n";
+            csvContent += `Tarikh Cetakan,${new Date().toLocaleDateString('ms-MY')}\n`;
+            csvContent += `Mode Analisa,${analysisMode === 'deposit' ? 'Strategi Deposit' : 'Strategi Tempoh'}\n`;
+            csvContent += `Harga Aset,RM ${P_asset.toFixed(2)}\n`;
+            csvContent += `Kadar Faedah,${rateLoan}%\n`;
+            csvContent += `Dividen ASB,${(rateAsb*100).toFixed(1)}%\n\n`;
+            
+            csvContent += "Tahun,Baki Hutang A,Pelaburan A (ASB),Nilai Bersih A,Baki Hutang B,Pelaburan B (ASB),Nilai Bersih B,Perbezaan (B - A)\n";
+
+            let monthlyRateAsb = rateAsb / 12;
+            
+            for (let i = 0; i <= commonTenure; i++) {
+                let currentBalA = 0;
+                let currentBalB = 0;
+
+                if (method === 'flat') {
+                    currentBalA = Math.max(0, A_loan - (A_loan/commonTenure * i));
+                    currentBalB = Math.max(0, B_loan - (B_loan/commonTenure * i));
+                } else {
+                    currentBalA = getBalanceAtMonth(A_loan, rateLoan, commonTenure, calcA.monthly + extraMonthly, i * 12);
+                    currentBalB = getBalanceAtMonth(B_loan, rateLoan, commonTenure, calcB.monthly, i * 12);
+                }
+
+                let currentInvA = 0;
+                let currentInvB = (analysisMode === 'deposit') ? B_startInvest : 0;
+                
+                if (analysisMode === 'deposit') {
+                    for(let m=1; m <= i*12; m++) {
+                        currentInvA = currentInvA * (1 + monthlyRateAsb) + monthlySurplusA;
+                        if (method === 'reducing' && isAutoMatch && m > calcA.actualMonths) {
+                             currentInvA += (calcA.monthly + extraMonthly);
+                        }
+                    }
+                    if(i > 0) currentInvB = B_startInvest * Math.pow(1 + rateAsb, i);
+                } else {
+                    let A_tenure = parseVal('shortTenure');
+                    if(A_tenure >= commonTenure) A_tenure = commonTenure - 1;
+                    
+                    let diff = monthlyPaymentA - monthlyPaymentB;
+                    
+                    for(let m=1; m <= i*12; m++) {
+                        currentInvA = currentInvA * (1 + monthlyRateAsb);
+                        if (m > A_tenure * 12) currentInvA += monthlyPaymentA;
+                        
+                        currentInvB = currentInvB * (1 + monthlyRateAsb);
+                        if (diff > 0) currentInvB += diff;
+                    }
+                }
+
+                let netWorthA = (P_asset - currentBalA) + currentInvA;
+                let netWorthB = (P_asset - currentBalB) + currentInvB;
+                let diffNet = netWorthB - netWorthA;
+
+                csvContent += `${i},${currentBalA.toFixed(2)},${currentInvA.toFixed(2)},${netWorthA.toFixed(2)},${currentBalB.toFixed(2)},${currentInvB.toFixed(2)},${netWorthB.toFixed(2)},${diffNet.toFixed(2)}\n`;
+            }
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "Laporan_Kewangan_Ultimate.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function getBalanceAtMonth(principal, ratePct, years, monthlyPayment, targetMonth) {
+            let r = ratePct / 100 / 12;
+            let balance = principal;
+            for(let m=0; m<targetMonth; m++) {
+                if(balance <= 0.1) return 0;
+                let interest = balance * r;
+                let principalPart = monthlyPayment - interest;
+                balance -= principalPart;
+            }
+            return Math.max(0, balance);
+        }
+
+        function downloadChart() {
+            const canvas = document.getElementById('financeChart');
+            const link = document.createElement('a');
+            link.download = 'Graf_Kewangan.png';
+            link.href = canvas.toDataURL();
+            link.click();
         }
 
         window.onload = function() {
