@@ -199,6 +199,10 @@
                             </div>
                         </div>
                         <div class="p-5 space-y-4">
+                            <div class="flex justify-between items-center group bg-indigo-50/50 -mx-5 px-5 py-2 border-l-4 border-indigo-500">
+                                <span class="text-sm font-semibold text-slate-600">Jumlah Deposit</span>
+                                <span class="text-sm font-bold text-indigo-700 number-font" id="res-A-deposit">RM 0</span>
+                            </div>
                             <div class="flex justify-between items-center group">
                                 <span class="text-sm text-slate-500">Jumlah Pinjaman</span>
                                 <span class="text-sm font-bold text-slate-900 number-font" id="res-A-loan">RM 0</span>
@@ -229,6 +233,10 @@
                             </div>
                         </div>
                         <div class="p-5 space-y-4">
+                            <div class="flex justify-between items-center bg-emerald-50/50 -mx-5 px-5 py-2 border-l-4 border-emerald-500">
+                                <span class="text-sm font-semibold text-slate-600">Jumlah Deposit</span>
+                                <span class="text-sm font-bold text-emerald-700 number-font" id="res-B-deposit">RM 0</span>
+                            </div>
                             <div class="flex justify-between items-center">
                                 <span class="text-sm text-slate-500">Jumlah Pinjaman</span>
                                 <span class="text-sm font-bold text-slate-900 number-font" id="res-B-loan">RM 0</span>
@@ -374,10 +382,12 @@
             let dividendEarned_B = totalDividend_B;
             let netWin_B = dividendEarned_B - interestSaved_A;
 
+            document.getElementById('res-A-deposit').innerText = formatRM(dp_A);
             document.getElementById('res-A-loan').innerText = formatRM(loanPrincipal_A);
             document.getElementById('res-A-monthly').innerText = formatRM(monthly_A);
             document.getElementById('res-A-interest').innerText = formatRM(totalInterest_A);
 
+            document.getElementById('res-B-deposit').innerText = formatRM(dp_B);
             document.getElementById('res-B-loan').innerText = formatRM(loanPrincipal_B);
             document.getElementById('res-B-monthly').innerText = formatRM(monthly_B);
             document.getElementById('res-B-interest').innerText = formatRM(totalInterest_B);
