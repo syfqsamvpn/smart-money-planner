@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Money Planner: Ultimate Edition</title>
+    <title>Smart Money Planner: Super App</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -49,370 +49,424 @@
             background: #e2e8f0;
             border-radius: 2px;
         }
+        
+        .nav-pill-active { background-color: #4f46e5; color: white; box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2); }
+        .nav-pill-inactive { background-color: white; color: #64748b; border: 1px solid #e2e8f0; }
+        .nav-pill-inactive:hover { background-color: #f1f5f9; color: #334155; }
     </style>
 </head>
 <body class="text-slate-800">
 
-    <nav class="sticky top-0 z-50 glass-card border-b border-slate-200/80">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-200">
-                    <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
-                </div>
-                <div>
-                    <h1 class="font-bold text-lg leading-none text-slate-900 tracking-tight">SmartMoney<span class="text-indigo-600">Planner</span></h1>
-                    <p class="text-[10px] text-slate-500 font-medium tracking-wide uppercase mt-0.5">Ultimate Financial Simulator</p>
+    <nav class="sticky top-0 z-50 glass-card border-b border-slate-200/80 mb-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="h-16 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-200">
+                        <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg leading-none text-slate-900 tracking-tight">SmartMoney<span class="text-indigo-600">Planner</span></h1>
+                        <p class="text-[10px] text-slate-500 font-medium tracking-wide uppercase mt-0.5">Super App Kewangan</p>
+                    </div>
                 </div>
             </div>
-            <div class="hidden md:flex items-center gap-2 bg-slate-100/80 p-1 rounded-lg">
-                <button onclick="setAnalysisMode('deposit')" id="nav-deposit" class="px-4 py-1.5 text-xs font-bold rounded-md transition-all shadow-sm bg-white text-indigo-600">Strategi Deposit</button>
-                <button onclick="setAnalysisMode('tenure')" id="nav-tenure" class="px-4 py-1.5 text-xs font-bold rounded-md transition-all text-slate-500 hover:text-slate-700">Strategi Tempoh</button>
+            
+            <div class="flex gap-2 pb-4 overflow-x-auto">
+                <button onclick="switchMainView('budget')" id="tab-main-budget" class="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all nav-pill-active whitespace-nowrap">
+                    <i data-lucide="wallet" class="w-4 h-4"></i>
+                    Smart Budget
+                </button>
+                <button onclick="switchMainView('asb')" id="tab-main-asb" class="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all nav-pill-inactive whitespace-nowrap">
+                    <i data-lucide="pie-chart" class="w-4 h-4"></i>
+                    Kalkulator ASB
+                </button>
+                <button onclick="switchMainView('loan')" id="tab-main-loan" class="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all nav-pill-inactive whitespace-nowrap">
+                    <i data-lucide="calculator" class="w-4 h-4"></i>
+                    Analisa Pinjaman
+                </button>
             </div>
         </div>
     </nav>
 
-    <div class="md:hidden px-4 py-3 bg-white border-b border-slate-200">
-        <div class="flex bg-slate-100 p-1 rounded-lg">
-            <button onclick="setAnalysisMode('deposit')" id="mob-deposit" class="flex-1 py-2 text-xs font-bold rounded-md transition-all shadow-sm bg-white text-indigo-600">Banding Deposit</button>
-            <button onclick="setAnalysisMode('tenure')" id="mob-tenure" class="flex-1 py-2 text-xs font-bold rounded-md transition-all text-slate-500">Banding Tempoh</button>
-        </div>
-    </div>
-
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
         
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            
-            <div class="lg:col-span-4 space-y-5">
+        <div id="view-budget" class="space-y-8 animate-fade-in">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 
-                <div class="glass-card rounded-2xl p-1.5 flex gap-1">
-                    <button onclick="setLoanType('car')" id="btn-car" class="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold transition-all bg-indigo-50 text-indigo-700 border border-indigo-100 shadow-sm">
-                        <i data-lucide="car" class="w-4 h-4"></i> Kereta
-                    </button>
-                    <button onclick="setLoanType('house')" id="btn-house" class="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium transition-all text-slate-500 hover:bg-slate-50">
-                        <i data-lucide="home" class="w-4 h-4"></i> Rumah
-                    </button>
-                </div>
-
-                <div class="glass-card rounded-2xl p-4 bg-gradient-to-br from-indigo-50 to-white border-indigo-100">
-                    <div class="flex items-center gap-2 mb-3">
-                        <div class="w-6 h-6 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
-                            <i data-lucide="briefcase" class="w-3.5 h-3.5"></i>
+                <div class="lg:col-span-4 space-y-6">
+                    <div class="glass-card rounded-2xl p-6 space-y-6">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                            <h2 class="font-bold text-slate-800 text-sm uppercase tracking-wider">Profil Kewangan</h2>
+                            <span class="text-[10px] bg-rose-50 text-rose-700 px-2 py-1 rounded font-bold border border-rose-100">BAJET</span>
                         </div>
-                        <span class="text-xs font-bold text-indigo-900 uppercase tracking-wide">Profil Pekerjaan</span>
-                    </div>
-                    <div class="flex bg-white rounded-lg p-1 border border-indigo-100 shadow-sm">
-                        <button onclick="setJobType('permanent')" id="btn-perm" class="flex-1 py-2 px-3 rounded-md text-xs font-bold transition-all bg-indigo-600 text-white shadow-sm">Tetap (Stabil)</button>
-                        <button onclick="setJobType('contract')" id="btn-cont" class="flex-1 py-2 px-3 rounded-md text-xs font-bold transition-all text-slate-500 hover:bg-slate-50">Kontrak / Freelance</button>
-                    </div>
-                </div>
 
-                <div class="glass-card rounded-2xl p-6 space-y-6">
-                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                        <h2 class="font-bold text-slate-800 text-sm uppercase tracking-wider">Parameter Utama</h2>
-                        <span class="text-[10px] bg-slate-100 px-2 py-1 rounded text-slate-500 font-bold">LANGKAH 1</span>
-                    </div>
-
-                    <div class="input-group">
-                        <div class="flex justify-between mb-1.5">
-                            <label class="text-xs font-semibold text-slate-500">Harga Aset</label>
-                            <span class="text-xs font-bold text-indigo-600 number-font" id="disp-assetPrice">RM 0</span>
-                        </div>
-                        <div class="relative">
-                            <input type="number" id="assetPrice" placeholder="0" class="w-full pl-3 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-700 focus:outline-none focus:bg-white transition-all number-font" oninput="syncInput('assetPrice')">
-                            <div class="absolute right-3 top-2.5 text-xs font-bold text-slate-400">MYR</div>
-                        </div>
-                        <input type="range" min="0" max="1000000" step="1000" value="0" class="mt-3" oninput="document.getElementById('assetPrice').value = this.value; syncInput('assetPrice')">
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
                         <div class="input-group">
-                            <label class="block text-xs font-semibold text-slate-500 mb-1.5">Tempoh (Tahun)</label>
-                            <input type="number" id="loanTenure" value="9" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-700 focus:outline-none focus:bg-white transition-all number-font" oninput="calculate()">
-                        </div>
-                        <div class="input-group">
-                            <label class="block text-xs font-semibold text-slate-500 mb-1.5">Kadar Bank (%)</label>
-                            <input type="number" id="loanRate" value="3.0" step="0.1" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-700 focus:outline-none focus:bg-white transition-all number-font" oninput="calculate()">
-                        </div>
-                    </div>
-
-                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
-                        <div class="flex justify-between items-center mb-2">
-                            <label class="text-xs font-semibold text-slate-500">Jenis Kadar</label>
-                            <span class="text-[10px] text-slate-400" id="method-hint">Biasanya Flat Rate untuk kereta</span>
-                        </div>
-                        <select id="calcMethod" class="w-full bg-white border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block p-2 font-medium" onchange="calculate()">
-                            <option value="flat">Flat Rate (Tetap)</option>
-                            <option value="reducing">Reducing Balance (Baki Berkurang)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="glass-card rounded-2xl p-6 space-y-6 relative overflow-hidden">
-                    <div class="absolute top-0 right-0 p-6 opacity-10 pointer-events-none">
-                        <i data-lucide="trending-up" class="w-24 h-24 text-emerald-600"></i>
-                    </div>
-
-                    <div class="flex items-center justify-between border-b border-slate-100 pb-3 relative z-10">
-                        <h2 class="font-bold text-slate-800 text-sm uppercase tracking-wider" id="strategy-title">Strategi Deposit</h2>
-                        <span class="text-[10px] bg-emerald-50 text-emerald-700 px-2 py-1 rounded font-bold border border-emerald-100">LANGKAH 2</span>
-                    </div>
-
-                    <div class="space-y-5 relative z-10">
-                        
-                        <div id="inputs-deposit-mode">
                             <div class="flex justify-between mb-1.5">
-                                <label class="text-xs font-semibold text-emerald-700">Tunai Di Tangan</label>
-                                <span class="text-xs font-bold text-emerald-600 number-font" id="disp-cashOnHand">RM 0</span>
+                                <label class="text-xs font-semibold text-slate-500">Gaji Bersih Bulanan</label>
+                                <span class="text-xs font-bold text-indigo-600 number-font" id="disp-monthlySalary">RM 0</span>
                             </div>
                             <div class="relative">
-                                <input type="number" id="cashOnHand" placeholder="0" class="w-full pl-3 pr-10 py-2.5 bg-emerald-50/50 border border-emerald-100 rounded-xl text-sm font-bold text-emerald-800 focus:outline-none focus:bg-white focus:border-emerald-500 transition-all number-font" oninput="syncInput('cashOnHand')">
+                                <input type="number" id="monthlySalary" placeholder="0" class="w-full pl-3 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-700 focus:outline-none focus:bg-white transition-all number-font" oninput="syncBudgetInput('monthlySalary')">
+                                <div class="absolute right-3 top-2.5 text-xs font-bold text-slate-400">MYR</div>
                             </div>
-                            <input type="range" min="0" max="200000" step="1000" value="0" class="mt-3 accent-emerald-600" oninput="document.getElementById('cashOnHand').value = this.value; syncInput('cashOnHand')">
                         </div>
 
-                        <div id="inputs-tenure-mode" class="hidden">
-                            <label class="block text-xs font-semibold text-emerald-700 mb-1.5">Target Tempoh Pendek (Tahun)</label>
-                            <input type="number" id="shortTenure" value="5" class="w-full px-3 py-2.5 bg-emerald-50/50 border border-emerald-100 rounded-xl text-sm font-bold text-emerald-800 focus:outline-none focus:bg-white focus:border-emerald-500 transition-all number-font" oninput="calculate()">
-                            <p class="text-[10px] text-slate-500 mt-2 leading-relaxed">
-                                Senario ini membandingkan menyelesaikan hutang dalam tempoh ini vs tempoh asal, dan melaburkan lebihan wang.
+                        <div class="space-y-3">
+                            <label class="text-xs font-semibold text-slate-500">Status Perkahwinan</label>
+                            <div class="flex bg-slate-50 p-1 rounded-xl border border-slate-200">
+                                <button onclick="setMaritalStatus('single')" id="btn-status-single" class="flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-all bg-white text-indigo-600 shadow-sm">Bujang</button>
+                                <button onclick="setMaritalStatus('married')" id="btn-status-married" class="flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-all text-slate-500 hover:text-slate-700">Berkahwin</button>
+                            </div>
+                        </div>
+
+                        <div id="child-input-group" class="hidden input-group animate-fade-in">
+                            <div class="flex justify-between mb-1.5">
+                                <label class="text-xs font-semibold text-slate-500">Bilangan Anak</label>
+                            </div>
+                            <input type="number" id="childCount" value="0" min="0" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-700 focus:outline-none focus:bg-white transition-all number-font" oninput="calculateBudget()">
+                        </div>
+
+                        <div class="p-4 bg-indigo-50 rounded-xl border border-indigo-100 mt-4">
+                            <h4 class="text-xs font-bold text-indigo-800 mb-2 flex items-center gap-2">
+                                <i data-lucide="lightbulb" class="w-3.5 h-3.5"></i> Nasihat Pintar
+                            </h4>
+                            <p id="budget-advice" class="text-xs text-slate-600 leading-relaxed">
+                                Masukkan gaji anda untuk mendapatkan cadangan pengagihan bajet yang optimum.
                             </p>
                         </div>
+                    </div>
+                </div>
 
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-500 mb-1.5">Dividen ASB (%)</label>
-                                <input type="number" id="asbRate" value="5.5" step="0.1" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-700 focus:outline-none focus:bg-white transition-all number-font" oninput="calculate()">
+                <div class="lg:col-span-8 space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        
+                        <div class="glass-card p-5 rounded-2xl border-l-4 border-emerald-500">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-xs font-bold text-slate-500 uppercase">Keperluan (Needs)</span>
+                                <span class="bg-emerald-100 text-emerald-700 text-[10px] px-2 py-0.5 rounded-full font-bold" id="pct-needs">50%</span>
                             </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-500 mb-1.5">Min. Deposit (%)</label>
-                                <input type="number" id="minDepoPercent" value="10" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-700 focus:outline-none focus:bg-white transition-all number-font" oninput="calculate()">
+                            <p class="text-2xl font-bold text-slate-800 number-font" id="val-needs">RM 0</p>
+                            <div class="mt-3 pt-3 border-t border-slate-100 space-y-1">
+                                <p class="text-[10px] text-slate-500 flex justify-between"><span>Rumah/Sewa</span> <span class="font-bold text-emerald-600" id="sub-house">RM 0</span></p>
+                                <p class="text-[10px] text-slate-500 flex justify-between"><span>Makan/Bil</span> <span class="font-bold text-emerald-600" id="sub-bills">RM 0</span></p>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-5 rounded-2xl border-l-4 border-amber-500">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-xs font-bold text-slate-500 uppercase">Kehendak (Wants)</span>
+                                <span class="bg-amber-100 text-amber-700 text-[10px] px-2 py-0.5 rounded-full font-bold" id="pct-wants">30%</span>
+                            </div>
+                            <p class="text-2xl font-bold text-slate-800 number-font" id="val-wants">RM 0</p>
+                            <div class="mt-3 pt-3 border-t border-slate-100 space-y-1">
+                                <p class="text-[10px] text-slate-500 flex justify-between"><span>Hiburan/Shop</span> <span class="font-bold text-amber-600" id="sub-fun">RM 0</span></p>
+                                <p class="text-[10px] text-slate-500 flex justify-between"><span>Luar Jangka</span> <span class="font-bold text-amber-600" id="sub-misc">RM 0</span></p>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-5 rounded-2xl border-l-4 border-indigo-500">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-xs font-bold text-slate-500 uppercase">Simpanan (Savings)</span>
+                                <span class="bg-indigo-100 text-indigo-700 text-[10px] px-2 py-0.5 rounded-full font-bold" id="pct-savings">20%</span>
+                            </div>
+                            <p class="text-2xl font-bold text-slate-800 number-font" id="val-savings">RM 0</p>
+                            <div class="mt-3 pt-3 border-t border-slate-100 space-y-1.5" id="savings-breakdown">
+                                <p class="text-[10px] text-slate-500 flex justify-between"><span>Simpanan Sendiri</span> <span class="font-bold text-indigo-600">RM 0</span></p>
                             </div>
                         </div>
                     </div>
 
-                    <div class="border-t border-slate-100 pt-4 relative z-10" id="adv-settings-container">
-                        <button onclick="toggleAdvanced()" class="flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-indigo-600 transition-colors w-full">
-                            <i data-lucide="settings-2" class="w-3 h-3"></i>
-                            Tetapan Lanjutan
-                            <i data-lucide="chevron-down" id="adv-chevron" class="w-3 h-3 ml-auto transition-transform"></i>
-                        </button>
-                        
-                        <div id="advanced-options" class="hidden mt-4 space-y-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
-                            
-                            <div id="auto-match-control" class="flex items-center justify-between bg-white p-2.5 rounded-lg border border-slate-200 shadow-sm">
-                                <div class="flex flex-col">
-                                    <span class="text-xs font-bold text-slate-700">Samakan Komitmen</span>
-                                    <span class="text-[10px] text-slate-400 font-medium">Bayar baki tunai ke Principal</span>
-                                </div>
-                                <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" id="autoMatchToggle" class="sr-only peer" onchange="toggleAutoMatch()">
-                                    <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
-                                </label>
+                    <div id="child-fund-card" class="hidden glass-card p-5 rounded-2xl border border-indigo-100 bg-gradient-to-r from-indigo-50 to-white">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2 bg-indigo-100 rounded-lg text-indigo-600">
+                                <i data-lucide="graduation-cap" class="w-5 h-5"></i>
                             </div>
-
                             <div>
-                                <label class="block text-xs font-semibold text-indigo-600 mb-1.5">Bayaran Ekstra Manual (A)</label>
-                                <input type="number" id="extraPayment" placeholder="0" class="w-full px-3 py-2 bg-white border border-indigo-100 rounded-lg text-sm font-bold text-indigo-700 focus:outline-none focus:ring-1 focus:ring-indigo-500 number-font" oninput="calculate()">
-                                <p class="text-[10px] text-slate-400 mt-1">Hanya berkesan jika Samakan Komitmen dimatikan.</p>
+                                <h4 class="text-sm font-bold text-indigo-900">Tabung Pendidikan Anak</h4>
+                                <p class="text-xs text-slate-500">Disyorkan asingkan daripada simpanan utama.</p>
+                            </div>
+                            <div class="ml-auto text-right">
+                                <p class="text-lg font-bold text-indigo-700 number-font" id="val-child-fund">RM 0</p>
+                                <p class="text-[10px] text-indigo-400">Setiap Bulan</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card rounded-2xl p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="font-bold text-slate-900">Analisa Agihan Pendapatan</h3>
+                            <div class="text-right">
+                                <p class="text-[10px] text-slate-400 font-bold uppercase">Baki Bajet</p>
+                                <p class="text-lg font-bold text-slate-800 number-font" id="budget-balance">RM 0</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col md:flex-row items-center gap-8">
+                            <div class="h-64 w-64 relative">
+                                <canvas id="budgetChart"></canvas>
+                                <div class="absolute inset-0 flex items-center justify-center flex-col pointer-events-none">
+                                    <span class="text-xs text-slate-400 font-medium">Jumlah</span>
+                                    <span class="text-lg font-bold text-slate-800 number-font" id="chart-center-val">RM 0</span>
+                                </div>
+                            </div>
+                            <div class="flex-1 space-y-4 w-full">
+                                <div class="space-y-2">
+                                    <div class="flex justify-between text-xs font-semibold text-slate-600"><span>Keperluan Wajib</span><span id="bar-needs-val">0%</span></div>
+                                    <div class="h-2 w-full bg-slate-100 rounded-full overflow-hidden"><div id="bar-needs" class="h-full bg-emerald-500 rounded-full transition-all duration-500" style="width: 0%"></div></div>
+                                </div>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between text-xs font-semibold text-slate-600"><span>Gaya Hidup</span><span id="bar-wants-val">0%</span></div>
+                                    <div class="h-2 w-full bg-slate-100 rounded-full overflow-hidden"><div id="bar-wants" class="h-full bg-amber-500 rounded-full transition-all duration-500" style="width: 0%"></div></div>
+                                </div>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between text-xs font-semibold text-slate-600"><span>Masa Depan & Anak</span><span id="bar-savings-val">0%</span></div>
+                                    <div class="h-2 w-full bg-slate-100 rounded-full overflow-hidden"><div id="bar-savings" class="h-full bg-indigo-500 rounded-full transition-all duration-500" style="width: 0%"></div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-asb" class="hidden space-y-8 animate-fade-in">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <div class="lg:col-span-4 space-y-6">
+                    <div class="glass-card rounded-2xl p-6 space-y-6">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                            <h2 class="font-bold text-slate-800 text-sm uppercase tracking-wider">Tetapan Pelaburan</h2>
+                            <span class="text-[10px] bg-emerald-50 text-emerald-700 px-2 py-1 rounded font-bold border border-emerald-100">INPUT</span>
+                        </div>
+                        <div class="input-group">
+                            <div class="flex justify-between mb-1.5">
+                                <label class="text-xs font-semibold text-slate-500">Modal Permulaan</label>
+                                <span class="text-xs font-bold text-indigo-600 number-font" id="disp-asbStart">RM 0</span>
+                            </div>
+                            <div class="relative">
+                                <input type="number" id="asbStart" placeholder="0" class="w-full pl-3 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-700 focus:outline-none focus:bg-white transition-all number-font" oninput="syncAsbInput('asbStart')">
+                                <div class="absolute right-3 top-2.5 text-xs font-bold text-slate-400">MYR</div>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <div class="flex justify-between mb-1.5">
+                                <label class="text-xs font-semibold text-slate-500">Simpanan Bulanan</label>
+                                <span class="text-xs font-bold text-indigo-600 number-font" id="disp-asbMonthly">RM 0</span>
+                            </div>
+                            <div class="relative">
+                                <input type="number" id="asbMonthly" placeholder="0" class="w-full pl-3 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-700 focus:outline-none focus:bg-white transition-all number-font" oninput="syncAsbInput('asbMonthly')">
+                                <div class="absolute right-3 top-2.5 text-xs font-bold text-slate-400">/Bln</div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="input-group">
+                                <label class="block text-xs font-semibold text-slate-500 mb-1.5">Kadar Dividen (%)</label>
+                                <input type="number" id="asbRateInput" value="5.5" step="0.1" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-700 focus:outline-none focus:bg-white transition-all number-font" oninput="calculateASB()">
+                            </div>
+                            <div class="input-group">
+                                <label class="block text-xs font-semibold text-slate-500 mb-1.5">Tempoh (Tahun)</label>
+                                <input type="number" id="asbYears" value="10" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-700 focus:outline-none focus:bg-white transition-all number-font" oninput="calculateASB()">
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <div class="lg:col-span-8 space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                            <p class="text-xs text-slate-500 font-bold uppercase mb-1">Jumlah Modal</p>
+                            <p class="text-xl font-bold text-slate-800 number-font" id="asb-res-principal">RM 0</p>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                            <p class="text-xs text-emerald-600 font-bold uppercase mb-1">Jumlah Dividen</p>
+                            <p class="text-xl font-bold text-emerald-600 number-font" id="asb-res-dividend">RM 0</p>
+                        </div>
+                        <div class="bg-gradient-to-br from-indigo-600 to-indigo-700 p-5 rounded-2xl shadow-lg text-white">
+                            <p class="text-xs text-indigo-100 font-bold uppercase mb-1">Nilai Akhir Portfolio</p>
+                            <p class="text-2xl font-bold number-font" id="asb-res-total">RM 0</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="font-bold text-slate-900">Unjuran Pertumbuhan Aset</h3>
+                            <div class="flex gap-3">
+                                <button onclick="downloadAsbCSV()" class="p-2 hover:bg-slate-100 rounded-lg text-slate-500 transition-colors"><i data-lucide="download" class="w-4 h-4"></i></button>
+                                <button onclick="downloadAsbImage()" class="p-2 hover:bg-slate-100 rounded-lg text-slate-500 transition-colors"><i data-lucide="camera" class="w-4 h-4"></i></button>
+                            </div>
+                        </div>
+                        <div class="h-80 w-full"><canvas id="asbChart"></canvas></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODUL 3: LOAN ANALYSIS (RESTORED FULLY) -->
+        <div id="view-loan" class="hidden space-y-8">
+            <div class="glass-card p-2 rounded-xl mb-6 inline-flex bg-slate-100/50">
+                <button onclick="setAnalysisMode('deposit')" id="nav-deposit" class="px-4 py-1.5 text-xs font-bold rounded-lg transition-all shadow-sm bg-white text-indigo-600">Strategi Deposit</button>
+                <button onclick="setAnalysisMode('tenure')" id="nav-tenure" class="px-4 py-1.5 text-xs font-bold rounded-lg transition-all text-slate-500 hover:text-slate-700">Strategi Tempoh</button>
             </div>
 
-            <div class="lg:col-span-8 space-y-6">
-                
-                <div id="verdict-card" class="bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-2xl p-6 md:p-8 shadow-xl relative overflow-hidden group">
-                    <div class="absolute right-0 top-0 h-full w-1/2 bg-white/5 skew-x-12 transform origin-top-right transition-transform group-hover:scale-110 duration-700"></div>
-                    
-                    <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-                        <div>
-                            <div class="flex items-center gap-2 mb-2">
-                                <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
-                                <span class="text-xs font-bold text-slate-300 uppercase tracking-widest">Keputusan Analisa</span>
-                            </div>
-                            <h2 id="verdict-text" class="text-2xl md:text-4xl font-bold tracking-tight mb-2">Mengira...</h2>
-                            <p id="verdict-sub" class="text-slate-400 text-sm max-w-lg">Berdasarkan data yang anda masukkan.</p>
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8" id="loan-dashboard">
+                <div class="lg:col-span-4 space-y-5">
+                    <div class="glass-card rounded-2xl p-1.5 flex gap-1">
+                        <button onclick="setLoanType('car')" id="btn-car" class="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold transition-all bg-indigo-50 text-indigo-700 border border-indigo-100 shadow-sm"><i data-lucide="car" class="w-4 h-4"></i> Kereta</button>
+                        <button onclick="setLoanType('house')" id="btn-house" class="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium transition-all text-slate-500 hover:bg-slate-50"><i data-lucide="home" class="w-4 h-4"></i> Rumah</button>
+                    </div>
+
+                    <div class="glass-card rounded-2xl p-4 bg-gradient-to-br from-indigo-50 to-white border-indigo-100">
+                        <div class="flex items-center gap-2 mb-3">
+                            <div class="w-6 h-6 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600"><i data-lucide="briefcase" class="w-3.5 h-3.5"></i></div>
+                            <span class="text-xs font-bold text-indigo-900 uppercase tracking-wide">Profil Pekerjaan</span>
                         </div>
-                        <div class="flex-shrink-0 text-center md:text-right">
-                            <div class="text-xs text-slate-400 font-medium uppercase mb-1">Nilai Bersih Tambahan</div>
-                            <div id="verdict-value" class="text-3xl md:text-4xl font-extrabold text-emerald-400 number-font">RM 0</div>
+                        <div class="flex bg-white rounded-lg p-1 border border-indigo-100 shadow-sm">
+                            <button onclick="setJobType('permanent')" id="btn-perm" class="flex-1 py-2 px-3 rounded-md text-xs font-bold transition-all bg-indigo-600 text-white shadow-sm">Tetap (Stabil)</button>
+                            <button onclick="setJobType('contract')" id="btn-cont" class="flex-1 py-2 px-3 rounded-md text-xs font-bold transition-all text-slate-500 hover:bg-slate-50">Kontrak / Freelance</button>
+                        </div>
+                    </div>
+
+                    <div class="glass-card rounded-2xl p-6 space-y-6">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                            <h2 class="font-bold text-slate-800 text-sm uppercase tracking-wider">Parameter Utama</h2>
+                            <span class="text-[10px] bg-slate-100 px-2 py-1 rounded text-slate-500 font-bold">LANGKAH 1</span>
+                        </div>
+                        <div class="input-group">
+                            <div class="flex justify-between mb-1.5"><label class="text-xs font-semibold text-slate-500">Harga Aset</label><span class="text-xs font-bold text-indigo-600 number-font" id="disp-assetPrice">RM 0</span></div>
+                            <div class="relative"><input type="number" id="assetPrice" placeholder="0" class="w-full pl-3 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-700 focus:outline-none focus:bg-white transition-all number-font" oninput="syncInput('assetPrice')"><div class="absolute right-3 top-2.5 text-xs font-bold text-slate-400">MYR</div></div>
+                            <input type="range" min="0" max="1000000" step="1000" value="0" class="mt-3" oninput="document.getElementById('assetPrice').value = this.value; syncInput('assetPrice')">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="input-group"><label class="block text-xs font-semibold text-slate-500 mb-1.5">Tempoh (Tahun)</label><input type="number" id="loanTenure" value="9" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-700 focus:outline-none focus:bg-white transition-all number-font" oninput="calculate()"></div>
+                            <div class="input-group"><label class="block text-xs font-semibold text-slate-500 mb-1.5">Kadar Bank (%)</label><input type="number" id="loanRate" value="3.0" step="0.1" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-700 focus:outline-none focus:bg-white transition-all number-font" oninput="calculate()"></div>
+                        </div>
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                            <div class="flex justify-between items-center mb-2"><label class="text-xs font-semibold text-slate-500">Jenis Kadar</label><span class="text-[10px] text-slate-400" id="method-hint">Biasanya Flat Rate untuk kereta</span></div>
+                            <select id="calcMethod" class="w-full bg-white border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block p-2 font-medium" onchange="calculate()">
+                                <option value="flat">Flat Rate (Tetap)</option>
+                                <option value="reducing">Reducing Balance (Baki Berkurang)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="glass-card rounded-2xl p-6 space-y-6 relative overflow-hidden">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-3 relative z-10">
+                            <h2 class="font-bold text-slate-800 text-sm uppercase tracking-wider" id="strategy-title">Strategi Deposit</h2>
+                            <span class="text-[10px] bg-emerald-50 text-emerald-700 px-2 py-1 rounded font-bold border border-emerald-100">LANGKAH 2</span>
+                        </div>
+                        <div class="space-y-5 relative z-10">
+                            <div id="inputs-deposit-mode">
+                                <div class="flex justify-between mb-1.5"><label class="text-xs font-semibold text-emerald-700">Tunai Di Tangan</label><span class="text-xs font-bold text-emerald-600 number-font" id="disp-cashOnHand">RM 0</span></div>
+                                <div class="relative"><input type="number" id="cashOnHand" placeholder="0" class="w-full pl-3 pr-10 py-2.5 bg-emerald-50/50 border border-emerald-100 rounded-xl text-sm font-bold text-emerald-800 focus:outline-none focus:bg-white focus:border-emerald-500 transition-all number-font" oninput="syncInput('cashOnHand')"></div>
+                                <input type="range" min="0" max="200000" step="1000" value="0" class="mt-3 accent-emerald-600" oninput="document.getElementById('cashOnHand').value = this.value; syncInput('cashOnHand')">
+                            </div>
+                            <div id="inputs-tenure-mode" class="hidden">
+                                <label class="block text-xs font-semibold text-emerald-700 mb-1.5">Target Tempoh Pendek (Tahun)</label>
+                                <input type="number" id="shortTenure" value="5" class="w-full px-3 py-2.5 bg-emerald-50/50 border border-emerald-100 rounded-xl text-sm font-bold text-emerald-800 focus:outline-none focus:bg-white focus:border-emerald-500 transition-all number-font" oninput="calculate()">
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="input-group"><label class="block text-xs font-semibold text-slate-500 mb-1.5">Dividen ASB (%)</label><input type="number" id="asbRate" value="5.5" step="0.1" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-700 focus:outline-none focus:bg-white transition-all number-font" oninput="calculate()"></div>
+                                <div class="input-group"><label class="block text-xs font-semibold text-slate-500 mb-1.5">Min. Deposit (%)</label><input type="number" id="minDepoPercent" value="10" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-700 focus:outline-none focus:bg-white transition-all number-font" oninput="calculate()"></div>
+                            </div>
+                        </div>
+                        <div class="border-t border-slate-100 pt-4 relative z-10">
+                            <button onclick="toggleAdvanced()" class="flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-indigo-600 transition-colors w-full"><i data-lucide="settings-2" class="w-3 h-3"></i> Tetapan Lanjutan <i data-lucide="chevron-down" id="adv-chevron" class="w-3 h-3 ml-auto transition-transform"></i></button>
+                            <div id="advanced-options" class="hidden mt-4 space-y-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                <div id="auto-match-control" class="flex items-center justify-between bg-white p-2.5 rounded-lg border border-slate-200 shadow-sm">
+                                    <div class="flex flex-col"><span class="text-xs font-bold text-slate-700">Samakan Komitmen</span><span class="text-[10px] text-slate-400 font-medium">Bayar baki tunai ke Principal</span></div>
+                                    <label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" id="autoMatchToggle" class="sr-only peer" onchange="toggleAutoMatch()"><div class="w-9 h-5 bg-slate-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div></label>
+                                </div>
+                                <div><label class="block text-xs font-semibold text-indigo-600 mb-1.5">Bayaran Ekstra Manual (A)</label><input type="number" id="extraPayment" placeholder="0" class="w-full px-3 py-2 bg-white border border-indigo-100 rounded-lg text-sm font-bold text-indigo-700 focus:outline-none focus:ring-1 focus:ring-indigo-500 number-font" oninput="calculate()"><p class="text-[10px] text-slate-400 mt-1">Hanya berkesan jika Samakan Komitmen dimatikan.</p></div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    
-                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-shadow duration-300 flex flex-col">
-                        <div class="p-5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                <div class="lg:col-span-8 space-y-6">
+                    <div id="verdict-card" class="bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-2xl p-6 md:p-8 shadow-xl relative overflow-hidden group">
+                        <div class="absolute right-0 top-0 h-full w-1/2 bg-white/5 skew-x-12 transform origin-top-right transition-transform group-hover:scale-110 duration-700"></div>
+                        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
                             <div>
-                                <h3 class="font-bold text-slate-900" id="title-A">Senario A</h3>
-                                <p class="text-xs text-slate-500 font-medium mt-0.5" id="sub-A">Penerangan A</p>
+                                <div class="flex items-center gap-2 mb-2"><span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span><span class="text-xs font-bold text-slate-300 uppercase tracking-widest">Keputusan Analisa</span></div>
+                                <h2 id="verdict-text" class="text-2xl md:text-4xl font-bold tracking-tight mb-2">Mengira...</h2>
+                                <p id="verdict-sub" class="text-slate-400 text-sm max-w-lg">Berdasarkan data yang anda masukkan.</p>
                             </div>
-                            <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold shadow-sm">A</div>
+                            <div class="flex-shrink-0 text-center md:text-right">
+                                <div class="text-xs text-slate-400 font-medium uppercase mb-1">Nilai Bersih Tambahan</div>
+                                <div id="verdict-value" class="text-3xl md:text-4xl font-extrabold text-emerald-400 number-font">RM 0</div>
+                            </div>
                         </div>
-                        
-                        <div class="p-6 space-y-5 flex-1">
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-shadow duration-300 flex flex-col">
+                            <div class="p-5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                                <div><h3 class="font-bold text-slate-900" id="title-A">Senario A</h3><p class="text-xs text-slate-500 font-medium mt-0.5" id="sub-A">Penerangan A</p></div>
+                                <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold shadow-sm">A</div>
+                            </div>
+                            <div class="p-6 space-y-5 flex-1">
+                                <div class="space-y-3">
+                                    <div id="row-A-deposit" class="flex justify-between items-center"><span class="text-sm text-slate-500">Deposit Dibayar</span><span class="text-sm font-bold text-slate-900 number-font" id="res-A-deposit">RM 0</span></div>
+                                    <div id="row-A-tenure" class="hidden flex justify-between items-center"><span class="text-sm text-slate-500">Tempoh Pinjaman</span><span class="text-sm font-bold text-slate-900 number-font" id="res-A-tenure-display">0 Thn</span></div>
+                                    <div class="flex justify-between items-center"><span class="text-sm text-slate-500">Jumlah Pinjaman</span><span class="text-sm font-bold text-slate-900 number-font" id="res-A-loan">RM 0</span></div>
+                                    <div class="flex justify-between items-start p-3 bg-slate-50 rounded-lg border border-slate-100"><span class="text-sm font-semibold text-slate-700 mt-1">Komitmen Bulanan</span><div class="text-right"><div class="text-sm font-bold text-slate-900 number-font" id="res-A-monthly">RM 0</div></div></div>
+                                    <div class="flex justify-between items-center pt-2 border-t border-slate-50"><span class="text-xs text-slate-400">Jumlah Faedah (Interest)</span><span class="text-xs font-bold text-rose-500 number-font" id="res-A-interest">RM 0</span></div>
+                                </div>
+                                <div id="block-A-invest" class="mt-auto pt-4 border-t border-slate-100 hidden">
+                                    <div class="flex justify-between items-center mb-2"><span class="text-xs text-indigo-600 font-semibold" id="lbl-A-invest">Hasil Pelaburan Semula</span><span class="text-xs font-bold text-indigo-600 number-font" id="res-A-asb">RM 0</span></div>
+                                    <div class="h-1.5 w-full bg-indigo-100 rounded-full overflow-hidden"><div class="h-full bg-indigo-500 w-full"></div></div>
+                                    <div id="invest-details-A" class="hidden text-[10px] text-slate-500 mt-2 flex justify-between"><span>Modal: <span id="res-A-initialInvest" class="font-bold">RM 0</span></span><span>Dividen: <span id="res-A-totalDividend" class="font-bold text-indigo-600">RM 0</span></span></div>
+                                </div>
+                            </div>
+                            <div class="p-4 bg-indigo-50 border-t border-indigo-100"><div class="flex justify-between items-center"><span class="text-xs font-bold text-indigo-800 uppercase tracking-wide">Aset Bersih Akhir</span><span class="text-lg font-extrabold text-indigo-700 number-font" id="res-A-net">RM 0</span></div></div>
+                        </div>
+
+                        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-shadow duration-300 flex flex-col">
+                            <div class="p-5 border-b border-slate-100 bg-emerald-50/30 flex justify-between items-center">
+                                <div><h3 class="font-bold text-slate-900" id="title-B">Senario B</h3><p class="text-xs text-slate-500 font-medium mt-0.5" id="sub-B">Penerangan B</p></div>
+                                <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold shadow-sm">B</div>
+                            </div>
+                            <div class="p-6 space-y-5 flex-1">
+                                <div class="space-y-3">
+                                    <div id="row-B-deposit" class="flex justify-between items-center"><span class="text-sm text-slate-500">Deposit Dibayar</span><span class="text-sm font-bold text-slate-900 number-font" id="res-B-deposit">RM 0</span></div>
+                                    <div id="row-B-tenure" class="hidden flex justify-between items-center"><span class="text-sm text-slate-500">Tempoh Pinjaman</span><span class="text-sm font-bold text-slate-900 number-font" id="res-B-tenure-display">0 Thn</span></div>
+                                    <div class="flex justify-between items-center"><span class="text-sm text-slate-500">Jumlah Pinjaman</span><span class="text-sm font-bold text-slate-900 number-font" id="res-B-loan">RM 0</span></div>
+                                    <div class="flex justify-between items-start p-3 bg-emerald-50/50 rounded-lg border border-emerald-100"><span class="text-sm font-semibold text-slate-700 mt-1">Komitmen Bulanan</span><div class="text-right"><div class="text-sm font-bold text-slate-900 number-font" id="res-B-monthly">RM 0</div></div></div>
+                                    <div class="flex justify-between items-center pt-2 border-t border-slate-50"><span class="text-xs text-slate-400">Jumlah Faedah (Interest)</span><span class="text-xs font-bold text-rose-500 number-font" id="res-B-interest">RM 0</span></div>
+                                </div>
+                                <div class="mt-auto pt-4 border-t border-slate-100">
+                                    <div class="flex justify-between items-center mb-1"><span class="text-xs text-emerald-600 font-semibold">Info Pelaburan (ASB)</span></div>
+                                    <div class="flex justify-between text-[10px] text-slate-500 mb-2"><span>Modal: <span id="res-B-initialInvest" class="font-bold">RM 0</span></span><span>Dividen: <span id="res-B-totalDividend" class="font-bold text-emerald-600">RM 0</span></span></div>
+                                    <div class="flex justify-between items-center mb-2"><span class="text-xs text-slate-500">Nilai Akhir ASB</span><span class="text-xs font-bold text-emerald-600 number-font" id="res-B-asb">RM 0</span></div>
+                                    <div class="h-1.5 w-full bg-emerald-100 rounded-full overflow-hidden"><div class="h-full bg-emerald-500 w-full"></div></div>
+                                </div>
+                            </div>
+                            <div class="p-4 bg-emerald-50 border-t border-emerald-100"><div class="flex justify-between items-center"><span class="text-xs font-bold text-emerald-800 uppercase tracking-wide">Aset Bersih Akhir</span><span class="text-lg font-extrabold text-emerald-700 number-font" id="res-B-net">RM 0</span></div></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <div><h3 class="font-bold text-slate-900">Unjuran Kekayaan Tahunan</h3><p class="text-xs text-slate-500">Pertumbuhan aset bersih dari tahun ke tahun.</p></div>
+                            <div class="flex gap-3">
+                                <button onclick="downloadCSV()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-600 text-xs font-bold hover:bg-indigo-100 transition-colors"><i data-lucide="download" class="w-3.5 h-3.5"></i> Laporan (CSV)</button>
+                                <button onclick="downloadProfessionalImage()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-700 text-xs font-bold hover:bg-emerald-100 transition-colors"><i data-lucide="camera" class="w-3.5 h-3.5"></i> Imej Laporan (Pro)</button>
+                            </div>
+                        </div>
+                        <div class="h-72 w-full relative bg-white p-2 rounded-xl"><canvas id="financeChart"></canvas></div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                        <div class="flex items-center gap-2 mb-4 pb-2 border-b border-slate-50"><i data-lucide="shield-alert" class="w-5 h-5 text-amber-500"></i><h3 class="font-bold text-slate-900">Analisa Risiko & Kesuaian Profil</h3></div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div class="space-y-3">
-                                <div id="row-A-deposit" class="flex justify-between items-center">
-                                    <span class="text-sm text-slate-500">Deposit Dibayar</span>
-                                    <span class="text-sm font-bold text-slate-900 number-font" id="res-A-deposit">RM 0</span>
-                                </div>
-                                <div id="row-A-tenure" class="hidden flex justify-between items-center">
-                                    <span class="text-sm text-slate-500">Tempoh Pinjaman</span>
-                                    <span class="text-sm font-bold text-slate-900 number-font" id="res-A-tenure-display">0 Thn</span>
-                                </div>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-sm text-slate-500">Jumlah Pinjaman</span>
-                                    <span class="text-sm font-bold text-slate-900 number-font" id="res-A-loan">RM 0</span>
-                                </div>
-                                <div class="flex justify-between items-start p-3 bg-slate-50 rounded-lg border border-slate-100">
-                                    <span class="text-sm font-semibold text-slate-700 mt-1">Komitmen Bulanan</span>
-                                    <div class="text-right">
-                                        <div class="text-sm font-bold text-slate-900 number-font" id="res-A-monthly">RM 0</div>
-                                    </div>
-                                </div>
-                                <div class="flex justify-between items-center pt-2 border-t border-slate-50">
-                                    <span class="text-xs text-slate-400">Jumlah Faedah (Interest)</span>
-                                    <span class="text-xs font-bold text-rose-500 number-font" id="res-A-interest">RM 0</span>
-                                </div>
+                                 <div class="flex items-center gap-2"><div class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center"><i data-lucide="briefcase" class="w-3 h-3 text-slate-600"></i></div><h4 class="text-xs font-bold text-slate-500 uppercase tracking-wide">Risiko Kehilangan Pekerjaan</h4></div>
+                                 <p id="risk-job-text" class="text-sm text-slate-600 leading-relaxed pl-8 border-l-2 border-slate-100">Analisa sedang dimuatkan...</p>
                             </div>
-
-                            <div id="block-A-invest" class="mt-auto pt-4 border-t border-slate-100 hidden">
-                                <div class="flex justify-between items-center mb-2">
-                                    <span class="text-xs text-indigo-600 font-semibold" id="lbl-A-invest">Hasil Pelaburan Semula</span>
-                                    <span class="text-xs font-bold text-indigo-600 number-font" id="res-A-asb">RM 0</span>
-                                </div>
-                                <div class="h-1.5 w-full bg-indigo-100 rounded-full overflow-hidden">
-                                    <div class="h-full bg-indigo-500 w-full"></div>
-                                </div>
-                                <div id="invest-details-A" class="hidden text-[10px] text-slate-500 mt-2 flex justify-between">
-                                    <span>Modal: <span id="res-A-initialInvest" class="font-bold">RM 0</span></span>
-                                    <span>Dividen: <span id="res-A-totalDividend" class="font-bold text-indigo-600">RM 0</span></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="p-4 bg-indigo-50 border-t border-indigo-100">
-                            <div class="flex justify-between items-center">
-                                <span class="text-xs font-bold text-indigo-800 uppercase tracking-wide">Aset Bersih Akhir</span>
-                                <span class="text-lg font-extrabold text-indigo-700 number-font" id="res-A-net">RM 0</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-shadow duration-300 flex flex-col">
-                        <div class="p-5 border-b border-slate-100 bg-emerald-50/30 flex justify-between items-center">
-                            <div>
-                                <h3 class="font-bold text-slate-900" id="title-B">Senario B</h3>
-                                <p class="text-xs text-slate-500 font-medium mt-0.5" id="sub-B">Penerangan B</p>
-                            </div>
-                            <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold shadow-sm">B</div>
-                        </div>
-                        
-                        <div class="p-6 space-y-5 flex-1">
                             <div class="space-y-3">
-                                <div id="row-B-deposit" class="flex justify-between items-center">
-                                    <span class="text-sm text-slate-500">Deposit Dibayar</span>
-                                    <span class="text-sm font-bold text-slate-900 number-font" id="res-B-deposit">RM 0</span>
-                                </div>
-                                <div id="row-B-tenure" class="hidden flex justify-between items-center">
-                                    <span class="text-sm text-slate-500">Tempoh Pinjaman</span>
-                                    <span class="text-sm font-bold text-slate-900 number-font" id="res-B-tenure-display">0 Thn</span>
-                                </div>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-sm text-slate-500">Jumlah Pinjaman</span>
-                                    <span class="text-sm font-bold text-slate-900 number-font" id="res-B-loan">RM 0</span>
-                                </div>
-                                <div class="flex justify-between items-start p-3 bg-emerald-50/50 rounded-lg border border-emerald-100">
-                                    <span class="text-sm font-semibold text-slate-700 mt-1">Komitmen Bulanan</span>
-                                    <div class="text-right">
-                                        <div class="text-sm font-bold text-slate-900 number-font" id="res-B-monthly">RM 0</div>
-                                    </div>
-                                </div>
-                                <div class="flex justify-between items-center pt-2 border-t border-slate-50">
-                                    <span class="text-xs text-slate-400">Jumlah Faedah (Interest)</span>
-                                    <span class="text-xs font-bold text-rose-500 number-font" id="res-B-interest">RM 0</span>
-                                </div>
-                            </div>
-
-                            <div class="mt-auto pt-4 border-t border-slate-100">
-                                <div class="flex justify-between items-center mb-1">
-                                    <span class="text-xs text-emerald-600 font-semibold">Info Pelaburan (ASB)</span>
-                                </div>
-                                <div class="flex justify-between text-[10px] text-slate-500 mb-2">
-                                    <span>Modal: <span id="res-B-initialInvest" class="font-bold">RM 0</span></span>
-                                    <span>Dividen: <span id="res-B-totalDividend" class="font-bold text-emerald-600">RM 0</span></span>
-                                </div>
-                                <div class="flex justify-between items-center mb-2">
-                                    <span class="text-xs text-slate-500">Nilai Akhir ASB</span>
-                                    <span class="text-xs font-bold text-emerald-600 number-font" id="res-B-asb">RM 0</span>
-                                </div>
-                                <div class="h-1.5 w-full bg-emerald-100 rounded-full overflow-hidden">
-                                    <div class="h-full bg-emerald-500 w-full"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="p-4 bg-emerald-50 border-t border-emerald-100">
-                            <div class="flex justify-between items-center">
-                                <span class="text-xs font-bold text-emerald-800 uppercase tracking-wide">Aset Bersih Akhir</span>
-                                <span class="text-lg font-extrabold text-emerald-700 number-font" id="res-B-net">RM 0</span>
+                                 <div class="flex items-center gap-2"><div class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center"><i data-lucide="user-check" class="w-3 h-3 text-slate-600"></i></div><h4 class="text-xs font-bold text-slate-500 uppercase tracking-wide">Profil Kesuaian</h4></div>
+                                 <p id="risk-profile-text" class="text-sm text-slate-600 leading-relaxed pl-8 border-l-2 border-slate-100">Analisa sedang dimuatkan...</p>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-                    <div class="flex items-center justify-between mb-6">
-                        <div>
-                            <h3 class="font-bold text-slate-900">Unjuran Kekayaan Tahunan</h3>
-                            <p class="text-xs text-slate-500">Pertumbuhan aset bersih dari tahun ke tahun.</p>
-                        </div>
-                        <div class="flex gap-3">
-                            <button onclick="downloadCSV()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-600 text-xs font-bold hover:bg-indigo-100 transition-colors">
-                                <i data-lucide="download" class="w-3.5 h-3.5"></i> Laporan (CSV)
-                            </button>
-                            <button onclick="downloadChart()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 text-slate-600 text-xs font-bold hover:bg-slate-100 transition-colors">
-                                <i data-lucide="image" class="w-3.5 h-3.5"></i> Graf
-                            </button>
-                        </div>
-                    </div>
-                    <div class="h-72 w-full relative bg-white p-2 rounded-xl">
-                        <canvas id="financeChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-                    <div class="flex items-center gap-2 mb-4 pb-2 border-b border-slate-50">
-                        <i data-lucide="shield-alert" class="w-5 h-5 text-amber-500"></i>
-                        <h3 class="font-bold text-slate-900">Analisa Risiko & Kesuaian Profil</h3>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div class="space-y-3">
-                             <div class="flex items-center gap-2">
-                                <div class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center">
-                                    <i data-lucide="briefcase" class="w-3 h-3 text-slate-600"></i>
-                                </div>
-                                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wide">Risiko Kehilangan Pekerjaan</h4>
-                             </div>
-                             <p id="risk-job-text" class="text-sm text-slate-600 leading-relaxed pl-8 border-l-2 border-slate-100">
-                                Analisa sedang dimuatkan...
-                             </p>
-                        </div>
-                        <div class="space-y-3">
-                             <div class="flex items-center gap-2">
-                                <div class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center">
-                                    <i data-lucide="user-check" class="w-3 h-3 text-slate-600"></i>
-                                </div>
-                                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wide">Profil Kesuaian</h4>
-                             </div>
-                             <p id="risk-profile-text" class="text-sm text-slate-600 leading-relaxed pl-8 border-l-2 border-slate-100">
-                                Analisa sedang dimuatkan...
-                             </p>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
     </main>
@@ -421,34 +475,331 @@
         let currentLoanType = 'car'; 
         let analysisMode = 'deposit'; 
         let currentJobType = 'permanent';
+        let currentMainView = 'budget';
         let chartInstance = null;
+        let asbChartInstance = null;
+        let budgetChartInstance = null;
+        let currentMaritalStatus = 'single';
+
+        function switchMainView(view) {
+            currentMainView = view;
+            const btnBudget = document.getElementById('tab-main-budget');
+            const btnAsb = document.getElementById('tab-main-asb');
+            const btnLoan = document.getElementById('tab-main-loan');
+            const viewBudget = document.getElementById('view-budget');
+            const viewAsb = document.getElementById('view-asb');
+            const viewLoan = document.getElementById('view-loan');
+
+            [btnBudget, btnAsb, btnLoan].forEach(btn => {
+                btn.classList.remove('nav-pill-active');
+                btn.classList.add('nav-pill-inactive');
+            });
+            [viewBudget, viewAsb, viewLoan].forEach(v => v.classList.add('hidden'));
+
+            if (view === 'budget') {
+                btnBudget.classList.add('nav-pill-active');
+                btnBudget.classList.remove('nav-pill-inactive');
+                viewBudget.classList.remove('hidden');
+                calculateBudget();
+            } else if (view === 'asb') {
+                btnAsb.classList.add('nav-pill-active');
+                btnAsb.classList.remove('nav-pill-inactive');
+                viewAsb.classList.remove('hidden');
+                calculateASB();
+            } else {
+                btnLoan.classList.add('nav-pill-active');
+                btnLoan.classList.remove('nav-pill-inactive');
+                viewLoan.classList.remove('hidden');
+                if(typeof calculate === 'function') calculate(); 
+            }
+        }
+
+        function setMaritalStatus(status) {
+            currentMaritalStatus = status;
+            const btnSingle = document.getElementById('btn-status-single');
+            const btnMarried = document.getElementById('btn-status-married');
+            const childInput = document.getElementById('child-input-group');
+
+            const activeClass = "flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-all bg-indigo-600 text-white shadow-sm";
+            const inactiveClass = "flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-all bg-white text-slate-500 hover:text-slate-700 shadow-sm";
+
+            if (status === 'single') {
+                btnSingle.className = activeClass;
+                btnMarried.className = inactiveClass;
+                childInput.classList.add('hidden');
+                document.getElementById('childCount').value = 0; 
+            } else {
+                btnMarried.className = activeClass;
+                btnSingle.className = inactiveClass;
+                childInput.classList.remove('hidden');
+            }
+            calculateBudget();
+        }
+
+        function calculateBudget() {
+            const salary = parseVal('monthlySalary');
+            let children = currentMaritalStatus === 'married' ? parseVal('childCount') : 0;
+            if (children < 0) children = 0;
+            
+            let needsPct = 0.50; 
+            let savingsPct = 0.20; 
+            let wantsPct = 0.30; 
+            let advice = "";
+            let childSavingPerHead = 0;
+
+            if (currentMaritalStatus === 'single') {
+                needsPct = 0.45; wantsPct = 0.25; savingsPct = 0.30;
+                advice = "Status Bujang: Masa terbaik untuk maksimumkan simpanan (30%) untuk aset masa depan.";
+            } else {
+                if (children === 0) {
+                    needsPct = 0.50; wantsPct = 0.30; savingsPct = 0.20;
+                    advice = "Fasa Keluarga Baru: Fokus 20% simpanan konsisten dan kawal hutang isi rumah.";
+                } else {
+                    const shiftFactor = Math.min(children * 0.05, 0.15); 
+                    needsPct = 0.50 + shiftFactor;
+                    wantsPct = 0.30 - shiftFactor;
+                    
+                    if (wantsPct < 0.15) {
+                        const diff = 0.15 - wantsPct;
+                        wantsPct = 0.15;
+                        needsPct -= diff; 
+                    }
+                    savingsPct = 1.0 - needsPct - wantsPct; 
+                    
+                    advice = `Komitmen anak (${children}) menaikkan Bajet Keperluan kepada ${(needsPct*100).toFixed(0)}%. Kehendak dikurangkan.`;
+                }
+            }
+
+            let totalChildAlloc = 0;
+            if (children > 0) {
+                if (salary < 4000) childSavingPerHead = 50;
+                else if (salary < 8000) childSavingPerHead = 100;
+                else childSavingPerHead = 200;
+
+                totalChildAlloc = childSavingPerHead * children;
+            }
+
+            let valTotalSavings = Math.round(salary * savingsPct);
+            let valNeeds = Math.round(salary * needsPct);
+            let valWants = salary - valNeeds - valTotalSavings; 
+
+            let valParentSavings = valTotalSavings;
+            let valChildSavings = 0;
+
+            if (children > 0) {
+                if (valTotalSavings >= totalChildAlloc) {
+                    valChildSavings = totalChildAlloc;
+                    valParentSavings = valTotalSavings - totalChildAlloc;
+                } else {
+                    valChildSavings = valTotalSavings; 
+                    valParentSavings = 0;
+                    advice += " AMARAN: Simpanan 20% tidak cukup menampung tabung anak ideal.";
+                }
+            }
+
+            document.getElementById('pct-needs').innerText = (needsPct*100).toFixed(0) + "%";
+            document.getElementById('val-needs').innerText = formatRM(valNeeds);
+            document.getElementById('sub-house').innerText = formatRM(valNeeds * 0.4); 
+            document.getElementById('sub-bills').innerText = formatRM(valNeeds * 0.3); 
+            
+            document.getElementById('pct-wants').innerText = (wantsPct*100).toFixed(0) + "%";
+            document.getElementById('val-wants').innerText = formatRM(valWants);
+            document.getElementById('sub-fun').innerText = formatRM(valWants * 0.6);
+            document.getElementById('sub-misc').innerText = formatRM(valWants * 0.4);
+
+            document.getElementById('pct-savings').innerText = (savingsPct*100).toFixed(0) + "%";
+            document.getElementById('val-savings').innerText = formatRM(valTotalSavings);
+
+            const breakdownEl = document.getElementById('savings-breakdown');
+            if (children > 0) {
+                breakdownEl.innerHTML = `
+                    <p class="text-[10px] text-slate-500 flex justify-between">
+                        <span>Tabung Anak (${children}x)</span> 
+                        <span class="font-bold text-emerald-600">${formatRM(valChildSavings)}</span>
+                    </p>
+                    <p class="text-[10px] text-slate-500 flex justify-between border-t border-slate-100 mt-1 pt-1">
+                        <span>Simpanan Ibu Bapa</span> 
+                        <span class="font-bold text-indigo-600">${formatRM(valParentSavings)}</span>
+                    </p>
+                `;
+            } else {
+                breakdownEl.innerHTML = `
+                    <p class="text-[10px] text-slate-500 flex justify-between">
+                        <span>Simpanan Sendiri/ASB</span> 
+                        <span class="font-bold text-indigo-600">${formatRM(valTotalSavings)}</span>
+                    </p>
+                `;
+            }
+
+            document.getElementById('budget-advice').innerText = advice;
+            document.getElementById('chart-center-val').innerText = formatRM(salary);
+            document.getElementById('budget-balance').innerText = "RM 0"; 
+
+            document.getElementById('bar-needs').style.width = (needsPct*100) + "%";
+            document.getElementById('bar-needs-val').innerText = (needsPct*100).toFixed(0) + "%";
+            
+            document.getElementById('bar-wants').style.width = (wantsPct*100) + "%";
+            document.getElementById('bar-wants-val').innerText = (wantsPct*100).toFixed(0) + "%";
+            
+            document.getElementById('bar-savings').style.width = (savingsPct*100) + "%";
+            document.getElementById('bar-savings-val').innerText = (savingsPct*100).toFixed(0) + "%";
+
+            updateBudgetChart(valNeeds, valWants, valTotalSavings);
+        }
+
+        function updateBudgetChart(needs, wants, savings) {
+            const ctx = document.getElementById('budgetChart').getContext('2d');
+            if (budgetChartInstance) budgetChartInstance.destroy();
+            Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
+            budgetChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Keperluan', 'Kehendak', 'Simpanan'],
+                    datasets: [{
+                        data: [needs, wants, savings],
+                        backgroundColor: ['#10b981', '#f59e0b', '#6366f1'],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '75%',
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function syncBudgetInput(id) {
+            const val = document.getElementById(id).value;
+            const display = document.getElementById('disp-' + id);
+            if (display) display.innerText = formatRM(val);
+            calculateBudget();
+        }
+
+        function calculateASB() {
+            const principal = parseVal('asbStart');
+            const monthly = parseVal('asbMonthly');
+            const rate = parseVal('asbRateInput');
+            const years = parseVal('asbYears');
+            let balance = principal;
+            let totalInvested = principal;
+            let chartLabels = [];
+            let dataBalance = [];
+            let dataPrincipal = [];
+
+            for (let y = 0; y <= years; y++) {
+                chartLabels.push("Tahun " + y);
+                dataBalance.push(balance);
+                dataPrincipal.push(totalInvested);
+                if (y < years) {
+                    let yearlyDividend = 0;
+                    for (let m = 1; m <= 12; m++) {
+                        balance += monthly;
+                        totalInvested += monthly;
+                        yearlyDividend += balance * (rate / 100 / 12);
+                    }
+                    balance += yearlyDividend;
+                }
+            }
+            document.getElementById('asb-res-principal').innerText = formatRM(totalInvested);
+            document.getElementById('asb-res-dividend').innerText = formatRM(balance - totalInvested);
+            document.getElementById('asb-res-total').innerText = formatRM(balance);
+            updateAsbChart(chartLabels, dataPrincipal, dataBalance);
+        }
+
+        function updateAsbChart(labels, dataPrincipal, dataBalance) {
+            const ctx = document.getElementById('asbChart').getContext('2d');
+            if (asbChartInstance) asbChartInstance.destroy();
+            Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
+            Chart.defaults.color = '#64748b';
+            asbChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'Modal Terkumpul', data: dataPrincipal, borderColor: '#94a3b8', backgroundColor: 'rgba(148, 163, 184, 0.1)', borderWidth: 2, fill: true, tension: 0.3 },
+                        { label: 'Nilai Aset', data: dataBalance, borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.1)', borderWidth: 3, fill: true, tension: 0.3 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } },
+                    scales: { y: { ticks: { callback: function(value) { return 'RM ' + value/1000 + 'k'; } }, grid: { color: '#f1f5f9', borderDash: [4, 4] } }, x: { grid: { display: false } } }
+                }
+            });
+        }
+        function syncAsbInput(id) {
+            const val = document.getElementById(id).value;
+            const display = document.getElementById('disp-' + id);
+            if (display) display.innerText = formatRM(val);
+            calculateASB();
+        }
+
+        function downloadAsbCSV() {
+            const principal = parseVal('asbStart');
+            const monthly = parseVal('asbMonthly');
+            const rate = parseVal('asbRateInput');
+            const years = parseVal('asbYears');
+            let csvContent = "data:text/csv;charset=utf-8,Tahun,Modal Terkumpul (RM),Dividen Tahunan (RM),Baki Akhir Tahun (RM)\n";
+            let balance = principal;
+            let totalInvested = principal;
+            csvContent += `0,${principal.toFixed(2)},0.00,${principal.toFixed(2)}\n`;
+            for (let y = 1; y <= years; y++) {
+                let yearlyDividend = 0;
+                for (let m = 1; m <= 12; m++) {
+                    balance += monthly;
+                    totalInvested += monthly;
+                    yearlyDividend += balance * (rate / 100 / 12);
+                }
+                balance += yearlyDividend;
+                csvContent += `${y},${totalInvested.toFixed(2)},${yearlyDividend.toFixed(2)},${balance.toFixed(2)}\n`;
+            }
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "Laporan_ASB.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function downloadAsbImage() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const width = 800; const height = 1000;
+            canvas.width = width; canvas.height = height;
+            const grad = ctx.createLinearGradient(0, 0, 0, height);
+            grad.addColorStop(0, '#0f172a'); grad.addColorStop(1, '#1e293b'); 
+            ctx.fillStyle = grad; ctx.fillRect(0, 0, width, height);
+            ctx.fillStyle = "#ffffff"; ctx.font = "bold 32px sans-serif"; ctx.fillText("LAPORAN KALKULATOR ASB", 40, 60);
+            ctx.fillStyle = "#94a3b8"; ctx.font = "16px sans-serif"; ctx.fillText("Dijana pada: " + new Date().toLocaleDateString('ms-MY'), 40, 90);
+            const total = document.getElementById('asb-res-total').innerText;
+            ctx.fillStyle = "rgba(255, 255, 255, 0.05)"; ctx.fillRect(40, 140, width - 80, 200);
+            ctx.fillStyle = "#10b981"; ctx.font = "bold 60px sans-serif"; ctx.textAlign = "center"; ctx.fillText(total, width / 2, 240);
+            ctx.fillStyle = "#cbd5e1"; ctx.font = "20px sans-serif"; ctx.fillText("NILAI AKHIR PELABURAN", width / 2, 280);
+            ctx.textAlign = "left";
+            const chartImg = document.getElementById('asbChart');
+            if (chartImg) ctx.drawImage(chartImg, 40, 400, width - 80, 400);
+            const link = document.createElement('a');
+            link.download = `Laporan_ASB_${Date.now()}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+        }
 
         function toggleAdvanced() {
             const el = document.getElementById('advanced-options');
             const chev = document.getElementById('adv-chevron');
-            if (el.classList.contains('hidden')) {
-                el.classList.remove('hidden');
-                chev.classList.add('rotate-180');
-            } else {
-                el.classList.add('hidden');
-                chev.classList.remove('rotate-180');
-            }
+            if (el.classList.contains('hidden')) { el.classList.remove('hidden'); chev.classList.add('rotate-180'); } else { el.classList.add('hidden'); chev.classList.remove('rotate-180'); }
         }
 
         function toggleAutoMatch() {
             const isAuto = document.getElementById('autoMatchToggle').checked;
             const extraInput = document.getElementById('extraPayment');
-            
-            if (isAuto) {
-                extraInput.disabled = true;
-                extraInput.classList.add('bg-slate-100', 'text-slate-500');
-                extraInput.classList.remove('bg-white', 'text-indigo-700');
-            } else {
-                extraInput.disabled = false;
-                extraInput.value = 0; 
-                extraInput.classList.remove('bg-slate-100', 'text-slate-500');
-                extraInput.classList.add('bg-white', 'text-indigo-700');
-            }
+            if (isAuto) { extraInput.disabled = true; extraInput.classList.add('bg-slate-100', 'text-slate-500'); extraInput.classList.remove('bg-white', 'text-indigo-700'); } 
+            else { extraInput.disabled = false; extraInput.value = 0; extraInput.classList.remove('bg-slate-100', 'text-slate-500'); extraInput.classList.add('bg-white', 'text-indigo-700'); }
             calculate();
         }
 
@@ -475,49 +826,26 @@
             currentJobType = type;
             const btnPerm = document.getElementById('btn-perm');
             const btnCont = document.getElementById('btn-cont');
-            
             const activeStyle = "flex-1 py-2 px-3 rounded-md text-xs font-bold transition-all bg-indigo-600 text-white shadow-sm";
             const inactiveStyle = "flex-1 py-2 px-3 rounded-md text-xs font-bold transition-all text-slate-500 hover:bg-slate-50";
-
-            if (type === 'permanent') {
-                btnPerm.className = activeStyle;
-                btnCont.className = inactiveStyle;
-            } else {
-                btnCont.className = activeStyle;
-                btnPerm.className = inactiveStyle;
-            }
+            if (type === 'permanent') { btnPerm.className = activeStyle; btnCont.className = inactiveStyle; } 
+            else { btnCont.className = activeStyle; btnPerm.className = inactiveStyle; }
             calculate();
         }
 
         function setLoanType(type) {
             currentLoanType = type;
-            
             const btnCar = document.getElementById('btn-car');
             const btnHouse = document.getElementById('btn-house');
             const activeClass = "flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold transition-all bg-indigo-50 text-indigo-700 border border-indigo-100 shadow-sm";
             const inactiveClass = "flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium transition-all text-slate-500 hover:bg-slate-50";
-
             if (type === 'car') {
-                btnCar.className = activeClass;
-                btnHouse.className = inactiveClass;
-                
-                document.getElementById('loanRate').value = 3.0;
-                document.getElementById('loanTenure').value = 9;
-                document.getElementById('calcMethod').value = 'flat';
-                document.getElementById('method-hint').innerText = "Biasanya Flat Rate untuk kereta";
-                
-                document.getElementById('auto-match-control').classList.add('hidden');
-                document.getElementById('autoMatchToggle').checked = false; 
-                document.getElementById('extraPayment').disabled = false;
+                btnCar.className = activeClass; btnHouse.className = inactiveClass;
+                document.getElementById('loanRate').value = 3.0; document.getElementById('loanTenure').value = 9; document.getElementById('calcMethod').value = 'flat'; document.getElementById('method-hint').innerText = "Biasanya Flat Rate untuk kereta";
+                document.getElementById('auto-match-control').classList.add('hidden'); document.getElementById('autoMatchToggle').checked = false; document.getElementById('extraPayment').disabled = false;
             } else {
-                btnHouse.className = activeClass;
-                btnCar.className = inactiveClass;
-                
-                document.getElementById('loanRate').value = 4.2;
-                document.getElementById('loanTenure').value = 30;
-                document.getElementById('calcMethod').value = 'reducing';
-                document.getElementById('method-hint').innerText = "Reducing Balance untuk rumah";
-                
+                btnHouse.className = activeClass; btnCar.className = inactiveClass;
+                document.getElementById('loanRate').value = 4.2; document.getElementById('loanTenure').value = 30; document.getElementById('calcMethod').value = 'reducing'; document.getElementById('method-hint').innerText = "Reducing Balance untuk rumah";
                 document.getElementById('auto-match-control').classList.remove('hidden');
             }
             calculate();
@@ -525,148 +853,74 @@
 
         function setAnalysisMode(mode) {
             analysisMode = mode;
-            
             const ids = ['nav-deposit', 'nav-tenure', 'mob-deposit', 'mob-tenure'];
             const activeStyle = "bg-white text-indigo-600 shadow-sm";
             const inactiveStyle = "text-slate-500 hover:text-slate-700 bg-transparent shadow-none";
-
-            ids.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) {
-                    el.className = `px-4 py-1.5 text-xs font-bold rounded-md transition-all ${inactiveStyle}`;
-                    if (id.includes('mob')) el.classList.add('flex-1', 'py-2');
-                }
-            });
-
+            ids.forEach(id => { const el = document.getElementById(id); if (el) { el.className = `px-4 py-1.5 text-xs font-bold rounded-md transition-all ${inactiveStyle}`; if (id.includes('mob')) el.classList.add('flex-1', 'py-2'); } });
             const activeIds = mode === 'deposit' ? ['nav-deposit', 'mob-deposit'] : ['nav-tenure', 'mob-tenure'];
-            activeIds.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) {
-                    el.className = `px-4 py-1.5 text-xs font-bold rounded-md transition-all ${activeStyle}`;
-                    if (id.includes('mob')) el.classList.add('flex-1', 'py-2');
-                }
-            });
+            activeIds.forEach(id => { const el = document.getElementById(id); if (el) { el.className = `px-4 py-1.5 text-xs font-bold rounded-md transition-all ${activeStyle}`; if (id.includes('mob')) el.classList.add('flex-1', 'py-2'); } });
 
             if (mode === 'deposit') {
-                document.getElementById('inputs-deposit-mode').classList.remove('hidden');
-                document.getElementById('inputs-tenure-mode').classList.add('hidden');
-                
-                document.getElementById('strategy-title').innerText = "Strategi Deposit";
-                document.getElementById('title-A').innerText = "Strategi A";
-                document.getElementById('sub-A').innerText = "Bayar Deposit Maksimum";
-                document.getElementById('title-B').innerText = "Strategi B";
-                document.getElementById('sub-B').innerText = "Deposit Min + Invest Baki";
-
-                document.getElementById('row-A-deposit').classList.remove('hidden');
-                document.getElementById('row-B-deposit').classList.remove('hidden');
-                document.getElementById('row-A-tenure').classList.add('hidden');
-                document.getElementById('row-B-tenure').classList.add('hidden');
-                
-                document.getElementById('block-A-invest').classList.add('hidden');
-                document.getElementById('invest-details-A').classList.add('hidden');
+                document.getElementById('inputs-deposit-mode').classList.remove('hidden'); document.getElementById('inputs-tenure-mode').classList.add('hidden');
+                document.getElementById('strategy-title').innerText = "Strategi Deposit"; document.getElementById('title-A').innerText = "Strategi A"; document.getElementById('sub-A').innerText = "Bayar Deposit Maksimum"; document.getElementById('title-B').innerText = "Strategi B"; document.getElementById('sub-B').innerText = "Deposit Min + Invest Baki";
+                document.getElementById('row-A-deposit').classList.remove('hidden'); document.getElementById('row-B-deposit').classList.remove('hidden'); document.getElementById('row-A-tenure').classList.add('hidden'); document.getElementById('row-B-tenure').classList.add('hidden');
+                document.getElementById('block-A-invest').classList.add('hidden'); document.getElementById('invest-details-A').classList.add('hidden');
             } else {
-                document.getElementById('inputs-deposit-mode').classList.add('hidden');
-                document.getElementById('inputs-tenure-mode').classList.remove('hidden');
-                
-                document.getElementById('strategy-title').innerText = "Strategi Tempoh";
-                document.getElementById('title-A').innerText = "Strategi A";
-                document.getElementById('sub-A').innerText = "Tempoh Pendek + Labur";
-                document.getElementById('title-B').innerText = "Strategi B";
-                document.getElementById('sub-B').innerText = "Tempoh Panjang + Invest";
-
-                document.getElementById('row-A-deposit').classList.add('hidden');
-                document.getElementById('row-B-deposit').classList.add('hidden');
-                document.getElementById('row-A-tenure').classList.remove('hidden');
-                document.getElementById('row-B-tenure').classList.remove('hidden');
-                
-                document.getElementById('block-A-invest').classList.remove('hidden');
-                document.getElementById('invest-details-A').classList.remove('hidden');
+                document.getElementById('inputs-deposit-mode').classList.add('hidden'); document.getElementById('inputs-tenure-mode').classList.remove('hidden');
+                document.getElementById('strategy-title').innerText = "Strategi Tempoh"; document.getElementById('title-A').innerText = "Strategi A"; document.getElementById('sub-A').innerText = "Tempoh Pendek + Labur"; document.getElementById('title-B').innerText = "Strategi B"; document.getElementById('sub-B').innerText = "Tempoh Panjang + Invest";
+                document.getElementById('row-A-deposit').classList.add('hidden'); document.getElementById('row-B-deposit').classList.add('hidden'); document.getElementById('row-A-tenure').classList.remove('hidden'); document.getElementById('row-B-tenure').classList.remove('hidden');
+                document.getElementById('block-A-invest').classList.remove('hidden'); document.getElementById('invest-details-A').classList.remove('hidden');
             }
             calculate();
         }
 
         function calculateMonthly(principal, ratePct, years, method, extraMonthly = 0) {
             if (principal <= 0) return { monthly: 0, totalInterest: 0, actualMonths: 0 };
-            
-            let monthly = 0;
-            let totalInterest = 0;
-            let actualMonths = years * 12;
-
+            let monthly = 0; let totalInterest = 0; let actualMonths = years * 12;
             if (method === 'flat') {
-                totalInterest = principal * (ratePct/100) * years;
-                monthly = (principal + totalInterest) / (years * 12);
+                totalInterest = principal * (ratePct/100) * years; monthly = (principal + totalInterest) / (years * 12);
             } else {
-                let r = ratePct / 100 / 12;
-                let n = years * 12;
-                
-                if (r === 0) {
-                    monthly = principal / n;
-                    totalInterest = 0;
-                } else {
+                let r = ratePct / 100 / 12; let n = years * 12;
+                if (r === 0) { monthly = principal / n; totalInterest = 0; } 
+                else {
                     let baseMonthly = principal * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-                    
-                    let balance = principal;
-                    let actualPayment = baseMonthly + extraMonthly;
-                    let accumInterest = 0;
-                    let m = 0;
-                    
+                    let balance = principal; let actualPayment = baseMonthly + extraMonthly; let accumInterest = 0; let m = 0;
                     while(balance > 0.1 && m < 1200) {
-                        let interest = balance * r;
-                        accumInterest += interest;
-                        let principalPart = actualPayment - interest;
-                        if (principalPart <= 0) break; 
-                        balance -= principalPart;
-                        m++;
+                        let interest = balance * r; accumInterest += interest; let principalPart = actualPayment - interest;
+                        if (principalPart <= 0) break; balance -= principalPart; m++;
                     }
-                    monthly = baseMonthly; 
-                    totalInterest = accumInterest;
-                    actualMonths = m;
+                    monthly = baseMonthly; totalInterest = accumInterest; actualMonths = m;
                 }
             }
             return { monthly, totalInterest, actualMonths };
         }
 
         function updateRiskAnalysis(monthlyA, monthlyB, mode) {
-            const riskJobEl = document.getElementById('risk-job-text');
-            const riskProfileEl = document.getElementById('risk-profile-text');
-            
+            const riskJobEl = document.getElementById('risk-job-text'); const riskProfileEl = document.getElementById('risk-profile-text');
             let diff = Math.abs(monthlyA - monthlyB);
             let lowerCommitmentLabel = monthlyA < monthlyB ? 'Strategi A (Komitmen Rendah)' : 'Strategi B (Komitmen Rendah)';
             let higherCommitmentLabel = monthlyA > monthlyB ? 'Strategi A (Komitmen Tinggi)' : 'Strategi B (Komitmen Tinggi)';
-            
             let isFreelance = currentJobType === 'contract';
-            
-            let textJob = "";
-            let textProfile = "";
+            let textJob = ""; let textProfile = "";
 
             if (mode === 'deposit') {
                 if (isFreelance) {
-                    textJob = `<span class="text-amber-600 font-bold">Perhatian Freelancer!</span> Anda perlukan tunai kecemasan. <br>
-                    <strong>Strategi B (Invest)</strong> mengekalkan tunai di tangan (ASB) yang sangat kritikal jika tiada job. Namun, komitmen bulanannya lebih tinggi.<br>
-                    Jika anda yakin boleh bayar bulanan, <strong>Strategi B</strong> lebih selamat kerana ada "Buffer Tunai". Jika risau tak mampu bayar bulanan, pilih <strong>Strategi A</strong> untuk rendahkan komitmen.`;
-                    
+                    textJob = `<span class="text-amber-600 font-bold">Perhatian Freelancer!</span> Anda perlukan tunai kecemasan. <br><strong>Strategi B (Invest)</strong> mengekalkan tunai di tangan (ASB) yang sangat kritikal jika tiada job. Namun, komitmen bulanannya lebih tinggi.<br>Jika anda yakin boleh bayar bulanan, <strong>Strategi B</strong> lebih selamat kerana ada "Buffer Tunai". Jika risau tak mampu bayar bulanan, pilih <strong>Strategi A</strong> untuk rendahkan komitmen.`;
                     textProfile = `Sebagai pekerja kontrak, <strong>Likuiditi (Tunai Cair)</strong> adalah raja. Strategi B memberi anda akses pantas kepada tunai pelaburan jika berlaku kecemasan, berbanding Strategi A di mana wang "terbenam" dalam aset.`;
                 } else {
                     textJob = `<strong class="text-emerald-600">${lowerCommitmentLabel}</strong> memberikan ketenangan minda dengan bayaran bulanan rendah. <br>Namun sebagai pekerja tetap, anda mungkin lebih selesa mengambil risiko <strong>${higherCommitmentLabel}</strong> untuk memaksimumkan pelaburan tunai di tangan.`;
-                    
                     textProfile = `Pekerja Tetap mempunyai aliran tunai stabil. Fokus anda boleh lebih kepada memaksimumkan <strong>Nilai Bersih (Net Worth)</strong> jangka panjang berbanding risaukan likuiditi jangka pendek.`;
                 }
-
             } else {
                 if (isFreelance) {
-                    textJob = `<span class="text-rose-600 font-bold">Amaran Risiko Tinggi!</span> Elakkan <strong>Strategi A (Tempoh Pendek)</strong> kerana komitmen bulanannya sangat tinggi. Jika hilang projek, anda akan tertekan.<br>
-                    Pilih <strong>Strategi B (Tempoh Panjang)</strong> untuk rendahkan bayaran wajib. Anda boleh bayar lebih bila ada duit, tapi tak wajib.`;
-                    
+                    textJob = `<span class="text-rose-600 font-bold">Amaran Risiko Tinggi!</span> Elakkan <strong>Strategi A (Tempoh Pendek)</strong> kerana komitmen bulanannya sangat tinggi. Jika hilang projek, anda akan tertekan.<br>Pilih <strong>Strategi B (Tempoh Panjang)</strong> untuk rendahkan bayaran wajib. Anda boleh bayar lebih bila ada duit, tapi tak wajib.`;
                     textProfile = `Fleksibiliti adalah kunci. Ambil tempoh panjang (B) untuk keselamatan. Gunakan lebihan pendapatan bulan-bulan "lebat" untuk simpanan sendiri, bukan terikat dengan bank.`;
                 } else {
                     textJob = `Jika anda ada dana kecemasan 6 bulan, <strong>Strategi A (Pendek)</strong> bagus untuk bebas hutang cepat. Tapi jika ragu-ragu, ambil <strong>Strategi B (Panjang)</strong> dan laburkan bakinya secara disiplin.`;
-                    
                     textProfile = `Untuk profil stabil, strategi agresif (A) boleh dipertimbangkan untuk menjimatkan faedah bank. Namun, strategi B memberi fleksibiliti tunai yang lebih baik untuk peluang pelaburan lain.`;
                 }
             }
-            
-            riskJobEl.innerHTML = textJob;
-            riskProfileEl.innerHTML = textProfile;
+            riskJobEl.innerHTML = textJob; riskProfileEl.innerHTML = textProfile;
         }
 
         function calculate() {
@@ -677,23 +931,15 @@
             const minDepoPct = parseVal('minDepoPercent');
             const isAutoMatch = document.getElementById('autoMatchToggle').checked;
             
-            if (method === 'flat') {
-                document.getElementById('auto-match-control').classList.add('hidden');
-            } else {
-                document.getElementById('auto-match-control').classList.remove('hidden');
-            }
+            if (method === 'flat') { document.getElementById('auto-match-control').classList.add('hidden'); } 
+            else { document.getElementById('auto-match-control').classList.remove('hidden'); }
 
             let extraMonthly = 0;
             const commonTenure = parseVal('loanTenure'); 
-            
-            if (method === 'reducing' && !isAutoMatch) {
-                extraMonthly = parseVal('extraPayment');
-            }
-
+            if (method === 'reducing' && !isAutoMatch) extraMonthly = parseVal('extraPayment');
             const minDepoAmount = P_asset * (minDepoPct / 100);
 
-            let A_loan, B_loan;
-            let A_monthly, B_monthly;
+            let A_loan, B_loan, A_monthly, B_monthly;
             let chartLabels = [], chartDataA = [], chartDataB = [];
             let A_finalInvest = 0, B_finalInvest = 0; 
 
@@ -701,10 +947,8 @@
                 let cash = parseVal('cashOnHand');
                 let A_depo = Math.max(cash, minDepoAmount);
                 let B_depo = minDepoAmount;
-                
                 A_loan = Math.max(0, P_asset - A_depo);
                 B_loan = Math.max(0, P_asset - B_depo);
-                
                 let B_startInvest = Math.max(0, cash - B_depo);
 
                 let autoExtraA = 0;
@@ -712,22 +956,17 @@
                     const baseA = calculateMonthly(A_loan, rateLoan, commonTenure, method, 0);
                     const baseB = calculateMonthly(B_loan, rateLoan, commonTenure, method, 0);
                     const diff = baseB.monthly - baseA.monthly;
-                    if (diff > 0) {
-                        autoExtraA = diff;
-                    }
+                    if (diff > 0) autoExtraA = diff;
                     document.getElementById('extraPayment').value = autoExtraA.toFixed(0);
                     extraMonthly = autoExtraA; 
                 }
 
                 const resA = calculateMonthly(A_loan, rateLoan, commonTenure, method, extraMonthly);
                 const resB = calculateMonthly(B_loan, rateLoan, commonTenure, method, 0); 
-
-                A_monthly = resA.monthly;
-                B_monthly = resB.monthly;
+                A_monthly = resA.monthly; B_monthly = resB.monthly;
 
                 B_finalInvest = B_startInvest * Math.pow((1 + rateAsb), commonTenure);
                 let B_dividend = B_finalInvest - B_startInvest;
-                
                 let interestDiff = resB.totalInterest - resA.totalInterest;
                 let netWin = 0;
 
@@ -738,33 +977,23 @@
                 if (method === 'reducing' && isAutoMatch && resA.actualMonths < commonTenure * 12) {
                     let remainingMonths = (commonTenure * 12) - resA.actualMonths;
                     let monthlyRateAsb = rateAsb / 12;
-                    
                     for(let m=1; m <= remainingMonths; m++) {
                         A_earlyInvestVal = A_earlyInvestVal * (1 + monthlyRateAsb);
                         A_earlyInvestVal += A_totalCommitment;
                         A_earlyInvestPrinc += A_totalCommitment;
                     }
-                    
                     A_finalInvest = A_earlyInvestVal;
                 }
 
                 if (method === 'flat') {
                     let diffMonthly = 0;
-                    if (B_monthly > A_monthly) {
-                        diffMonthly = B_monthly - A_monthly;
-                    }
-
+                    if (B_monthly > A_monthly) diffMonthly = B_monthly - A_monthly;
                     let monthlyRateAsb = rateAsb / 12;
-                    let fundA = 0;
-                    let A_totalPrinc = 0;
-                    
+                    let fundA = 0; let A_totalPrinc = 0;
                     for (let m = 1; m <= commonTenure * 12; m++) {
-                        fundA = fundA * (1 + monthlyRateAsb);
-                        fundA += diffMonthly;
-                        A_totalPrinc += diffMonthly;
+                        fundA = fundA * (1 + monthlyRateAsb); fundA += diffMonthly; A_totalPrinc += diffMonthly;
                     }
                     A_finalInvest = fundA;
-
                     netWin = B_finalInvest - A_finalInvest;
 
                     document.getElementById('res-A-initialInvest').innerText = formatRM(A_totalPrinc);
@@ -784,17 +1013,12 @@
 
                     for (let i = 0; i <= commonTenure; i++) {
                         chartLabels.push(`Thn ${i}`);
-                        
                         let fA = 0;
-                        for(let m=1; m<=i*12; m++) {
-                            fA = fA * (1 + monthlyRateAsb) + diffMonthly;
-                        }
+                        for(let m=1; m<=i*12; m++) { fA = fA * (1 + monthlyRateAsb) + diffMonthly; }
                         chartDataA.push(fA);
-
                         let fB = B_startInvest * Math.pow(1 + rateAsb, i);
                         chartDataB.push(fB);
                     }
-
                 } else {
                     if (isAutoMatch) {
                         let valA_net = A_finalInvest - resA.totalInterest;
@@ -812,10 +1036,8 @@
                             let monthlyTextA = formatRM(A_monthly);
                             let settleBadge = "";
                             if (resA.actualMonths < commonTenure * 12) {
-                                const y = Math.floor(resA.actualMonths / 12);
-                                const m = Math.round(resA.actualMonths % 12);
-                                let label = y > 0 ? `${y} Tahun ` : "";
-                                label += m > 0 ? `${m} Bulan` : "";
+                                const y = Math.floor(resA.actualMonths / 12); const m = Math.round(resA.actualMonths % 12);
+                                let label = y > 0 ? `${y} Tahun ` : ""; label += m > 0 ? `${m} Bulan` : "";
                                 settleBadge = `<span class="text-[10px] text-emerald-600 font-bold block mt-1 text-right bg-emerald-50 rounded px-1 w-max ml-auto border border-emerald-100">Selesai: ${label}</span>`;
                             }
                             monthlyTextA += `<span class="text-[10px] text-indigo-600 block mt-1 text-right w-max ml-auto border-t border-indigo-100 pt-0.5">+ Extra ${formatRM(extraMonthly)}</span>`;
@@ -826,26 +1048,17 @@
                              document.getElementById('block-A-invest').classList.add('hidden');
                              updateMonthlyDisplay(A_monthly, B_monthly, extraMonthly, resA.actualMonths, resB.actualMonths, commonTenure * 12);
                         }
-                        
                         document.getElementById('res-A-net').innerText = formatRM(valA_net);
                         document.getElementById('res-B-net').innerText = formatRM(valB_net);
-
                     } else {
                         let monthlySurplus = 0;
-                        if (B_monthly > A_monthly) {
-                            monthlySurplus = B_monthly - A_monthly;
-                        }
-                        
+                        if (B_monthly > A_monthly) monthlySurplus = B_monthly - A_monthly;
                         let monthlyRateAsb = rateAsb / 12;
-                        let fundA = 0;
-                        let A_totalPrinc = 0;
+                        let fundA = 0; let A_totalPrinc = 0;
                         for (let m = 1; m <= commonTenure * 12; m++) {
-                            fundA = fundA * (1 + monthlyRateAsb);
-                            fundA += monthlySurplus;
-                            A_totalPrinc += monthlySurplus;
+                            fundA = fundA * (1 + monthlyRateAsb); fundA += monthlySurplus; A_totalPrinc += monthlySurplus;
                         }
                         A_finalInvest = fundA;
-                        
                         let valA_net = A_finalInvest - resA.totalInterest;
                         let valB_net = B_finalInvest - resB.totalInterest;
                         netWin = valB_net - valA_net;
@@ -868,50 +1081,38 @@
                         document.getElementById('res-A-net').innerText = formatRM(valA_net);
                         document.getElementById('res-B-net').innerText = formatRM(valB_net);
                     }
-
                     for (let i = 0; i <= commonTenure; i++) {
                         chartLabels.push(`Thn ${i}`);
-                        
                         let valA = 0;
                         if (isAutoMatch) {
                             let monthsPassed = i * 12;
-                            if (monthsPassed <= resA.actualMonths) {
-                                valA = -(resA.totalInterest / resA.actualMonths * monthsPassed);
-                            } else {
+                            if (monthsPassed <= resA.actualMonths) valA = -(resA.totalInterest / resA.actualMonths * monthsPassed);
+                            else {
                                 let monthsInvested = monthsPassed - resA.actualMonths;
                                 let monthlyRateAsb = rateAsb / 12;
                                 let investVal = 0;
-                                for(let m=1; m <= monthsInvested; m++) {
-                                    investVal = investVal * (1 + monthlyRateAsb) + A_totalCommitment;
-                                }
+                                for(let m=1; m <= monthsInvested; m++) { investVal = investVal * (1 + monthlyRateAsb) + A_totalCommitment; }
                                 valA = investVal - resA.totalInterest;
                             }
                         } else {
                             let monthlySurplus = (B_monthly > A_monthly) ? B_monthly - A_monthly : 0;
                             let monthlyRateAsb = rateAsb / 12;
                             let investVal = 0;
-                            for(let m=1; m <= i * 12; m++) {
-                                investVal = investVal * (1 + monthlyRateAsb) + monthlySurplus;
-                            }
+                            for(let m=1; m <= i * 12; m++) { investVal = investVal * (1 + monthlyRateAsb) + monthlySurplus; }
                             valA = investVal - (resA.totalInterest / commonTenure * i);
                         }
                         chartDataA.push(valA);
-
                         let valB = B_startInvest * Math.pow(1 + rateAsb, i) - (resB.totalInterest / commonTenure * i);
                         chartDataB.push(valB);
                     }
                 }
-
                 document.getElementById('res-A-deposit').innerText = formatRM(A_depo);
                 document.getElementById('res-B-deposit').innerText = formatRM(B_depo);
-                
                 document.getElementById('res-B-initialInvest').innerText = formatRM(B_startInvest);
                 document.getElementById('res-B-totalDividend').innerText = formatRM(B_dividend);
                 document.getElementById('res-B-asb').innerText = formatRM(B_finalInvest);
-
                 updateVerdict(netWin, "Strategi B (Invest)", "Strategi A (Deposit Tinggi)");
                 updateRiskAnalysis(A_monthly + (isAutoMatch ? extraMonthly : 0), B_monthly, 'deposit');
-                
                 document.getElementById('res-A-loan').innerText = formatRM(A_loan);
                 document.getElementById('res-B-loan').innerText = formatRM(B_loan);
                 document.getElementById('res-A-interest').innerText = formatRM(resA.totalInterest);
@@ -920,57 +1121,40 @@
             } else {
                 let A_tenure = parseVal('shortTenure');
                 let B_tenure = commonTenure;
-                
                 if(A_tenure >= B_tenure) A_tenure = B_tenure - 1;
                 if(A_tenure < 1) A_tenure = 1;
-
                 let loanAmount = P_asset - minDepoAmount;
-                
                 const resA = calculateMonthly(loanAmount, rateLoan, A_tenure, method, 0); 
                 const resB = calculateMonthly(loanAmount, rateLoan, B_tenure, method, 0); 
-
-                A_monthly = resA.monthly;
-                B_monthly = resB.monthly;
-
+                A_monthly = resA.monthly; B_monthly = resB.monthly;
                 let monthlyRateAsb = rateAsb / 12;
                 
-                let fundA = 0;
-                let A_principal = 0;
+                let fundA = 0; let A_principal = 0;
                 for(let m=1; m <= B_tenure*12; m++) {
                     fundA = fundA * (1 + monthlyRateAsb);
-                    if(m > A_tenure*12) {
-                        fundA += A_monthly;
-                        A_principal += A_monthly;
-                    }
+                    if(m > A_tenure*12) { fundA += A_monthly; A_principal += A_monthly; }
                 }
                 A_finalInvest = fundA;
 
                 let monthlyDiff = A_monthly - B_monthly;
-                let fundB = 0;
-                let B_principal = 0;
+                let fundB = 0; let B_principal = 0;
                 for(let m=1; m <= B_tenure*12; m++) {
-                    fundB = fundB * (1 + monthlyRateAsb);
-                    fundB += monthlyDiff;
-                    B_principal += monthlyDiff;
+                    fundB = fundB * (1 + monthlyRateAsb); fundB += monthlyDiff; B_principal += monthlyDiff;
                 }
                 B_finalInvest = fundB;
 
                 let netWin = B_finalInvest - A_finalInvest;
-
                 document.getElementById('res-A-tenure-display').innerText = A_tenure + " Thn";
                 document.getElementById('res-B-tenure-display').innerText = B_tenure + " Thn";
-                
                 document.getElementById('lbl-A-invest').innerText = "Hasil Pelaburan (Selepas Hutang)";
                 document.getElementById('res-A-initialInvest').innerText = formatRM(A_principal);
                 document.getElementById('res-A-totalDividend').innerText = formatRM(A_finalInvest - A_principal);
                 document.getElementById('res-A-asb').innerText = formatRM(A_finalInvest);
                 document.getElementById('res-A-net').innerText = formatRM(A_finalInvest);
-
                 document.getElementById('res-B-initialInvest').innerText = formatRM(B_principal);
                 document.getElementById('res-B-totalDividend').innerText = formatRM(B_finalInvest - B_principal);
                 document.getElementById('res-B-asb').innerText = formatRM(B_finalInvest);
                 document.getElementById('res-B-net').innerText = formatRM(B_finalInvest);
-
                 document.getElementById('res-A-loan').innerText = formatRM(loanAmount);
                 document.getElementById('res-B-loan').innerText = formatRM(loanAmount);
                 document.getElementById('res-A-interest').innerText = formatRM(resA.totalInterest);
@@ -978,7 +1162,6 @@
                 
                 const investTextA = `<span class="text-[10px] text-indigo-600 block mt-1 text-right w-max ml-auto border-t border-indigo-100 pt-0.5">Labur: ${formatRM(A_monthly)} (Slps Thn ${A_tenure})</span>`;
                 const investTextB = `<span class="text-[10px] text-emerald-600 block mt-1 text-right w-max ml-auto border-t border-emerald-100 pt-0.5">Labur: ${formatRM(monthlyDiff)} (Setiap Bulan)</span>`;
-
                 updateMonthlyDisplay(A_monthly, B_monthly, 0, resA.actualMonths, resB.actualMonths, B_tenure * 12, investTextA, investTextB);
 
                 updateVerdict(netWin, "Strategi B (Tempoh Panjang)", "Strategi A (Tempoh Pendek)");
@@ -986,23 +1169,14 @@
 
                 for (let i = 0; i <= B_tenure; i++) {
                     chartLabels.push(`Thn ${i}`);
-                    
                     let fA = 0;
-                    for(let m=1; m<=i*12; m++) {
-                        fA = fA * (1 + monthlyRateAsb);
-                        if(m > A_tenure*12) fA += A_monthly;
-                    }
+                    for(let m=1; m<=i*12; m++) { fA = fA * (1 + monthlyRateAsb); if(m > A_tenure*12) fA += A_monthly; }
                     chartDataA.push(fA);
-
                     let fB = 0;
-                    for(let m=1; m<=i*12; m++) {
-                        fB = fB * (1 + monthlyRateAsb);
-                        fB += monthlyDiff;
-                    }
+                    for(let m=1; m<=i*12; m++) { fB = fB * (1 + monthlyRateAsb); fB += monthlyDiff; }
                     chartDataB.push(fB);
                 }
             }
-
             updateChart(chartLabels, chartDataA, chartDataB);
         }
 
@@ -1016,25 +1190,17 @@
             }
 
             if (monthsA < originalMonths) {
-                const y = Math.floor(monthsA / 12);
-                const m = Math.round(monthsA % 12);
-                let label = "";
-                if (y > 0) label += `${y} Tahun`;
-                if (m > 0) label += ` ${m} Bulan`;
+                const y = Math.floor(monthsA / 12); const m = Math.round(monthsA % 12);
+                let label = y > 0 ? `${y} Tahun` : ""; label += m > 0 ? ` ${m} Bulan` : "";
                 if (!label) label = "0 Bulan";
-
                 const settleBadge = `<span class="text-[10px] text-emerald-600 font-bold block mt-1 text-right bg-emerald-50 rounded px-1 w-max ml-auto border border-emerald-100">Selesai: ${label}</span>`;
                 txtA += settleBadge;
             }
 
             if (monthsB < originalMonths) {
-                const y = Math.floor(monthsB / 12);
-                const m = Math.round(monthsB % 12);
-                let label = "";
-                if (y > 0) label += `${y} Tahun`;
-                if (m > 0) label += ` ${m} Bulan`;
+                const y = Math.floor(monthsB / 12); const m = Math.round(monthsB % 12);
+                let label = y > 0 ? `${y} Tahun` : ""; label += m > 0 ? ` ${m} Bulan` : "";
                 if (!label) label = "0 Bulan";
-
                 const settleBadge = `<span class="text-[10px] text-emerald-600 font-bold block mt-1 text-right bg-emerald-50 rounded px-1 w-max ml-auto border border-emerald-100">Selesai: ${label}</span>`;
                 txtB += settleBadge;
             }
@@ -1051,19 +1217,14 @@
             const elVal = document.getElementById('verdict-value');
             const elSub = document.getElementById('verdict-sub');
             const card = document.getElementById('verdict-card');
-
             if (netWin > 0) {
-                elText.innerText = "Pilih " + winnerName;
-                elText.className = "text-2xl md:text-3xl font-bold tracking-tight mb-2 text-emerald-300";
-                elVal.innerText = "+ " + formatRM(netWin);
-                elVal.className = "text-3xl md:text-4xl font-extrabold text-emerald-400 number-font";
+                elText.innerText = "Pilih " + winnerName; elText.className = "text-2xl md:text-3xl font-bold tracking-tight mb-2 text-emerald-300";
+                elVal.innerText = "+ " + formatRM(netWin); elVal.className = "text-3xl md:text-4xl font-extrabold text-emerald-400 number-font";
                 elSub.innerText = `${winnerName} memberikan nilai bersih lebih tinggi berbanding ${loserName}.`;
                 card.className = "bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-2xl p-6 md:p-8 shadow-xl relative overflow-hidden group border-b-4 border-emerald-500";
             } else {
-                elText.innerText = "Pilih " + loserName; 
-                elText.className = "text-2xl md:text-3xl font-bold tracking-tight mb-2 text-indigo-300";
-                elVal.innerText = "+ " + formatRM(Math.abs(netWin));
-                elVal.className = "text-3xl md:text-4xl font-extrabold text-indigo-400 number-font";
+                elText.innerText = "Pilih " + loserName; elText.className = "text-2xl md:text-3xl font-bold tracking-tight mb-2 text-indigo-300";
+                elVal.innerText = "+ " + formatRM(Math.abs(netWin)); elVal.className = "text-3xl md:text-4xl font-extrabold text-indigo-400 number-font";
                 elSub.innerText = `${loserName} lebih menjimatkan atau menguntungkan dalam senario ini.`;
                 card.className = "bg-gradient-to-r from-slate-900 to-indigo-950 text-white rounded-2xl p-6 md:p-8 shadow-xl relative overflow-hidden group border-b-4 border-indigo-500";
             }
@@ -1072,236 +1233,108 @@
         function updateChart(labels, dataA, dataB) {
             const ctx = document.getElementById('financeChart')?.getContext('2d');
             if (!ctx) return; 
-
             if (chartInstance) chartInstance.destroy();
-
-            if (typeof Chart === 'undefined') {
-                console.error("Chart.js failed to load");
-                return;
-            }
-
+            if (typeof Chart === 'undefined') { console.error("Chart.js failed to load"); return; }
             Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
             Chart.defaults.color = '#64748b';
-
             chartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: labels,
                     datasets: [
-                        {
-                            label: 'Strategi A',
-                            data: dataA,
-                            borderColor: '#6366f1',
-                            backgroundColor: 'rgba(99, 102, 241, 0.1)',
-                            borderWidth: 3,
-                            tension: 0.4,
-                            pointRadius: 0,
-                            pointHoverRadius: 6,
-                            fill: true
-                        },
-                        {
-                            label: 'Strategi B',
-                            data: dataB,
-                            borderColor: '#10b981',
-                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                            borderWidth: 3,
-                            tension: 0.4,
-                            pointRadius: 0,
-                            pointHoverRadius: 6,
-                            fill: true
-                        }
+                        { label: 'Strategi A', data: dataA, borderColor: '#6366f1', backgroundColor: 'rgba(99, 102, 241, 0.1)', borderWidth: 3, tension: 0.4, pointRadius: 0, pointHoverRadius: 6, fill: true },
+                        { label: 'Strategi B', data: dataB, borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.1)', borderWidth: 3, tension: 0.4, pointRadius: 0, pointHoverRadius: 6, fill: true }
                     ]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: { mode: 'index', intersect: false },
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
-                            padding: 12,
-                            cornerRadius: 8,
-                            titleFont: { size: 13, weight: 600 },
-                            bodyFont: { size: 12 },
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) label += ': ';
-                                    if (context.parsed.y !== null) {
-                                        label += new Intl.NumberFormat('ms-MY', { style: 'currency', currency: 'MYR', maximumFractionDigits: 0 }).format(context.parsed.y);
-                                    }
-                                    return label;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            ticks: { 
-                                callback: function(value) { return 'RM ' + value/1000 + 'k'; },
-                                font: { size: 11, weight: 500 }
-                            },
-                            grid: { color: '#f1f5f9', borderDash: [4, 4] },
-                            border: { display: false }
-                        },
-                        x: { 
-                            grid: { display: false },
-                            ticks: { font: { size: 11 } }
-                        }
-                    }
-                }
+                options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false }, plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(15, 23, 42, 0.9)', padding: 12, cornerRadius: 8, titleFont: { size: 13, weight: 600 }, bodyFont: { size: 12 }, callbacks: { label: function(context) { let label = context.dataset.label || ''; if (label) label += ': '; if (context.parsed.y !== null) { label += new Intl.NumberFormat('ms-MY', { style: 'currency', currency: 'MYR', maximumFractionDigits: 0 }).format(context.parsed.y); } return label; } } } }, scales: { y: { ticks: { callback: function(value) { return 'RM ' + value/1000 + 'k'; }, font: { size: 11, weight: 500 } }, grid: { color: '#f1f5f9', borderDash: [4, 4] }, border: { display: false } }, x: { grid: { display: false }, ticks: { font: { size: 11 } } } } }
             });
         }
 
+        function downloadProfessionalImage() {
+            const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
+            const width = 1200; const height = 1400; canvas.width = width; canvas.height = height;
+            const grad = ctx.createLinearGradient(0, 0, 0, height); grad.addColorStop(0, '#0f172a'); grad.addColorStop(1, '#1e293b'); ctx.fillStyle = grad; ctx.fillRect(0, 0, width, height);
+            ctx.fillStyle = "#ffffff"; ctx.font = "bold 40px 'Plus Jakarta Sans', sans-serif"; ctx.fillText("SMART MONEY PLANNER", 60, 80);
+            ctx.fillStyle = "#94a3b8"; ctx.font = "500 24px 'Plus Jakarta Sans', sans-serif"; ctx.fillText("Laporan Analisa Kewangan Ultimate", 60, 120);
+            ctx.textAlign = "right"; ctx.fillText(new Date().toLocaleDateString('ms-MY', { year: 'numeric', month: 'long', day: 'numeric' }), width - 60, 80); ctx.textAlign = "left";
+            const verdictText = document.getElementById('verdict-text').innerText; const verdictValue = document.getElementById('verdict-value').innerText; const isGreen = verdictText.includes("B"); const accentColor = isGreen ? "#10b981" : "#6366f1"; 
+            ctx.fillStyle = "rgba(255, 255, 255, 0.03)"; ctx.beginPath(); if (ctx.roundRect) { ctx.roundRect(60, 160, width - 120, 180, 20); } else { ctx.rect(60, 160, width - 120, 180); } ctx.fill(); ctx.strokeStyle = "rgba(255, 255, 255, 0.1)"; ctx.lineWidth = 1; ctx.stroke();
+            ctx.textAlign = "center"; ctx.fillStyle = "#94a3b8"; ctx.font = "bold 20px sans-serif"; ctx.fillText("KEPUTUSAN ANALISA", width / 2, 210);
+            ctx.fillStyle = accentColor; ctx.font = "bold 48px sans-serif"; ctx.fillText(verdictText, width / 2, 260);
+            ctx.fillStyle = "#ffffff"; ctx.font = "bold 36px sans-serif"; ctx.fillText("Nilai Bersih Tambahan: " + verdictValue, width / 2, 310);
+            ctx.textAlign = "left";
+            const paramY = 400; const params = [ { label: "Harga Aset", val: document.getElementById('disp-assetPrice').innerText }, { label: "Tunai Di Tangan", val: document.getElementById('disp-cashOnHand').innerText }, { label: "Tempoh", val: document.getElementById('loanTenure').value + " Tahun" }, { label: "Kadar Bank", val: document.getElementById('loanRate').value + "%" }, { label: "Dividen ASB", val: document.getElementById('asbRate').value + "%" } ];
+            const colWidth = (width - 120) / params.length; params.forEach((p, i) => { let x = 60 + i * colWidth; ctx.fillStyle = "#64748b"; ctx.font = "bold 16px sans-serif"; ctx.fillText(p.label.toUpperCase(), x, paramY); ctx.fillStyle = "#e2e8f0"; ctx.font = "bold 28px sans-serif"; ctx.fillText(p.val, x, paramY + 35); });
+            ctx.beginPath(); ctx.strokeStyle = "#334155"; ctx.lineWidth = 2; ctx.moveTo(60, 480); ctx.lineTo(width - 60, 480); ctx.stroke();
+            const colA_X = 60; const colB_X = width / 2 + 30; const colW = width / 2 - 90; const startY = 520;
+            function drawScenarioCard(x, title, sub, colorHex, bgHex, data) {
+                const boxHeight = 850; ctx.fillStyle = bgHex; ctx.beginPath(); if (ctx.roundRect) { ctx.roundRect(x, startY, colW, boxHeight, 24); } else { ctx.rect(x, startY, colW, boxHeight); } ctx.fill(); ctx.strokeStyle = colorHex; ctx.lineWidth = 2; ctx.stroke();
+                ctx.fillStyle = colorHex; ctx.font = "bold 32px sans-serif"; ctx.fillText(title, x + 30, startY + 60); ctx.fillStyle = "#94a3b8"; ctx.font = "20px sans-serif"; ctx.fillText(sub, x + 30, startY + 90);
+                let rowY = startY + 160;
+                data.forEach(item => {
+                    ctx.fillStyle = "#cbd5e1"; ctx.font = "500 18px sans-serif"; ctx.fillText(item.label, x + 30, rowY);
+                    let tempDiv = document.createElement("div"); tempDiv.innerHTML = item.value; let mainText = ""; let subText = "";
+                    tempDiv.childNodes.forEach(node => { if (node.nodeType === 3) { mainText += node.textContent; } else if (node.nodeType === 1) { if(subText) subText += " | "; subText += node.innerText; } });
+                    mainText = mainText.trim(); if(!mainText && subText) { mainText = subText; subText = ""; }
+                    ctx.textAlign = "right"; ctx.fillStyle = item.highlight ? colorHex : "#ffffff"; ctx.font = item.highlight ? "bold 28px sans-serif" : "bold 24px sans-serif";
+                    if (subText) { ctx.fillText(mainText, x + colW - 30, rowY - 6); ctx.fillStyle = "#94a3b8"; ctx.font = "600 14px sans-serif"; ctx.fillText(subText, x + colW - 30, rowY + 14); } else { ctx.fillText(mainText, x + colW - 30, rowY + 5); }
+                    ctx.textAlign = "left";
+                    if (!item.noLine) { ctx.beginPath(); ctx.strokeStyle = "rgba(255,255,255,0.1)"; ctx.lineWidth = 1; let lineY = rowY + 30; ctx.moveTo(x + 30, lineY); ctx.lineTo(x + colW - 30, lineY); ctx.stroke(); }
+                    rowY += 75; 
+                });
+            }
+            const dataA = [ { label: "Deposit Dibayar", value: document.getElementById('res-A-deposit').innerText }, { label: "Jumlah Pinjaman", value: document.getElementById('res-A-loan').innerText }, { label: "Komitmen Bulanan", value: document.getElementById('res-A-monthly').innerHTML }, { label: "Total Interest", value: document.getElementById('res-A-interest').innerText }, { label: "Simpanan/ASB Akhir", value: document.getElementById('res-A-asb').innerText || "RM 0" }, { label: "Modal Pelaburan", value: document.getElementById('res-A-initialInvest').innerText || "RM 0" }, { label: "Dividen Terkumpul", value: document.getElementById('res-A-totalDividend').innerText || "RM 0" }, { label: "ASET BERSIH AKHIR", value: document.getElementById('res-A-net').innerText, highlight: true, noLine: true } ];
+            const dataB = [ { label: "Deposit Dibayar", value: document.getElementById('res-B-deposit').innerText }, { label: "Jumlah Pinjaman", value: document.getElementById('res-B-loan').innerText }, { label: "Komitmen Bulanan", value: document.getElementById('res-B-monthly').innerHTML }, { label: "Total Interest", value: document.getElementById('res-B-interest').innerText }, { label: "Simpanan/ASB Akhir", value: document.getElementById('res-B-asb').innerText }, { label: "Modal Pelaburan", value: document.getElementById('res-B-initialInvest').innerText }, { label: "Dividen Terkumpul", value: document.getElementById('res-B-totalDividend').innerText }, { label: "ASET BERSIH AKHIR", value: document.getElementById('res-B-net').innerText, highlight: true, noLine: true } ];
+            drawScenarioCard(colA_X, "Senario A", document.getElementById('sub-A').innerText, "#818cf8", "rgba(99, 102, 241, 0.1)", dataA);
+            drawScenarioCard(colB_X, "Senario B", document.getElementById('sub-B').innerText, "#34d399", "rgba(16, 185, 129, 0.1)", dataB);
+            ctx.textAlign = "center"; ctx.fillStyle = "#475569"; ctx.font = "italic 16px sans-serif"; ctx.fillText("Dijana oleh Smart Money Planner. Tidak menggantikan nasihat kewangan bertauliah.", width / 2, height - 40);
+            const link = document.createElement('a'); link.download = `Analisa_SmartMoney_${Date.now()}.png`; link.href = canvas.toDataURL(); link.click();
+        }
+
         function downloadCSV() {
-            const P_asset = parseVal('assetPrice');
-            const rateLoan = parseVal('loanRate');
-            const method = document.getElementById('calcMethod').value;
-            const rateAsb = parseVal('asbRate') / 100;
-            const minDepoPct = parseVal('minDepoPercent');
-            const isAutoMatch = document.getElementById('autoMatchToggle').checked;
-            let extraMonthly = (method === 'reducing' && !isAutoMatch) ? parseVal('extraPayment') : 0;
-            const commonTenure = parseVal('loanTenure'); 
-            const minDepoAmount = P_asset * (minDepoPct / 100);
-
-            let A_loan, B_loan;
-            let cash = parseVal('cashOnHand');
-            let A_depo, B_depo, B_startInvest;
-            let autoExtraA = 0;
-
+            const P_asset = parseVal('assetPrice'); const rateLoan = parseVal('loanRate'); const method = document.getElementById('calcMethod').value; const rateAsb = parseVal('asbRate') / 100; const minDepoPct = parseVal('minDepoPercent'); const isAutoMatch = document.getElementById('autoMatchToggle').checked; let extraMonthly = (method === 'reducing' && !isAutoMatch) ? parseVal('extraPayment') : 0; const commonTenure = parseVal('loanTenure'); const minDepoAmount = P_asset * (minDepoPct / 100);
+            let A_loan, B_loan; let cash = parseVal('cashOnHand'); let A_depo, B_depo, B_startInvest; let autoExtraA = 0;
             if (analysisMode === 'deposit') {
-                A_depo = Math.max(cash, minDepoAmount);
-                B_depo = minDepoAmount;
-                A_loan = Math.max(0, P_asset - A_depo);
-                B_loan = Math.max(0, P_asset - B_depo);
-                B_startInvest = Math.max(0, cash - B_depo);
-
-                if (method === 'reducing' && isAutoMatch) {
-                    const baseA = calculateMonthly(A_loan, rateLoan, commonTenure, method, 0);
-                    const baseB = calculateMonthly(B_loan, rateLoan, commonTenure, method, 0);
-                    const diff = baseB.monthly - baseA.monthly;
-                    if (diff > 0) autoExtraA = diff;
-                    extraMonthly = autoExtraA; 
-                }
+                A_depo = Math.max(cash, minDepoAmount); B_depo = minDepoAmount; A_loan = Math.max(0, P_asset - A_depo); B_loan = Math.max(0, P_asset - B_depo); B_startInvest = Math.max(0, cash - B_depo);
+                if (method === 'reducing' && isAutoMatch) { const baseA = calculateMonthly(A_loan, rateLoan, commonTenure, method, 0); const baseB = calculateMonthly(B_loan, rateLoan, commonTenure, method, 0); const diff = baseB.monthly - baseA.monthly; if (diff > 0) autoExtraA = diff; extraMonthly = autoExtraA; }
             } else {
-                let A_tenure = parseVal('shortTenure');
-                let B_tenure = commonTenure;
-                if(A_tenure >= B_tenure) A_tenure = B_tenure - 1;
-                if(A_tenure < 1) A_tenure = 1;
-                
-                A_loan = P_asset - minDepoAmount;
-                B_loan = P_asset - minDepoAmount;
-                B_startInvest = 0; 
+                let A_tenure = parseVal('shortTenure'); let B_tenure = commonTenure; if(A_tenure >= B_tenure) A_tenure = B_tenure - 1; if(A_tenure < 1) A_tenure = 1; A_loan = P_asset - minDepoAmount; B_loan = P_asset - minDepoAmount; B_startInvest = 0; 
             }
-
-            const calcA = calculateMonthly(A_loan, rateLoan, analysisMode === 'deposit' ? commonTenure : parseVal('shortTenure'), method, extraMonthly);
-            const calcB = calculateMonthly(B_loan, rateLoan, commonTenure, method, 0);
-
-            let monthlyPaymentA = calcA.monthly + (analysisMode === 'deposit' ? extraMonthly : 0);
-            let monthlyPaymentB = calcB.monthly;
-
-            let monthlySurplusA = 0;
-            if (analysisMode === 'deposit') {
-                 if (method === 'flat' || (method === 'reducing' && !isAutoMatch)) {
-                    if (monthlyPaymentB > monthlyPaymentA) monthlySurplusA = monthlyPaymentB - monthlyPaymentA;
-                }
-            }
-
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "LAPORAN ANALISA KEWANGAN - SMART MONEY PLANNER\n";
-            csvContent += `Tarikh Cetakan,${new Date().toLocaleDateString('ms-MY')}\n`;
-            csvContent += `Mode Analisa,${analysisMode === 'deposit' ? 'Strategi Deposit' : 'Strategi Tempoh'}\n`;
-            csvContent += `Harga Aset,RM ${P_asset.toFixed(2)}\n`;
-            csvContent += `Kadar Faedah,${rateLoan}%\n`;
-            csvContent += `Dividen ASB,${(rateAsb*100).toFixed(1)}%\n\n`;
-            
-            csvContent += "Tahun,Baki Hutang A,Pelaburan A (ASB),Nilai Bersih A,Baki Hutang B,Pelaburan B (ASB),Nilai Bersih B,Perbezaan (B - A)\n";
-
+            const calcA = calculateMonthly(A_loan, rateLoan, analysisMode === 'deposit' ? commonTenure : parseVal('shortTenure'), method, extraMonthly); const calcB = calculateMonthly(B_loan, rateLoan, commonTenure, method, 0);
+            let monthlyPaymentA = calcA.monthly + (analysisMode === 'deposit' ? extraMonthly : 0); let monthlyPaymentB = calcB.monthly;
+            let monthlySurplusA = 0; if (analysisMode === 'deposit') { if (method === 'flat' || (method === 'reducing' && !isAutoMatch)) { if (monthlyPaymentB > monthlyPaymentA) monthlySurplusA = monthlyPaymentB - monthlyPaymentA; } }
+            let csvContent = "data:text/csv;charset=utf-8,"; csvContent += "LAPORAN ANALISA KEWANGAN - SMART MONEY PLANNER\n"; csvContent += `Tarikh Cetakan,${new Date().toLocaleDateString('ms-MY')}\n`; csvContent += `Mode Analisa,${analysisMode === 'deposit' ? 'Strategi Deposit' : 'Strategi Tempoh'}\n`; csvContent += `Harga Aset,RM ${P_asset.toFixed(2)}\n`; csvContent += `Kadar Faedah,${rateLoan}%\n`; csvContent += `Dividen ASB,${(rateAsb*100).toFixed(1)}%\n\n`; csvContent += "Tahun,Baki Hutang A,Pelaburan A (ASB),Nilai Bersih A,Baki Hutang B,Pelaburan B (ASB),Nilai Bersih B,Perbezaan (B - A)\n";
             let monthlyRateAsb = rateAsb / 12;
-            
             for (let i = 0; i <= commonTenure; i++) {
-                let currentBalA = 0;
-                let currentBalB = 0;
-
-                if (method === 'flat') {
-                    currentBalA = Math.max(0, A_loan - (A_loan/commonTenure * i));
-                    currentBalB = Math.max(0, B_loan - (B_loan/commonTenure * i));
-                } else {
-                    currentBalA = getBalanceAtMonth(A_loan, rateLoan, commonTenure, calcA.monthly + extraMonthly, i * 12);
-                    currentBalB = getBalanceAtMonth(B_loan, rateLoan, commonTenure, calcB.monthly, i * 12);
-                }
-
-                let currentInvA = 0;
-                let currentInvB = (analysisMode === 'deposit') ? B_startInvest : 0;
-                
+                let currentBalA = 0; let currentBalB = 0;
+                if (method === 'flat') { currentBalA = Math.max(0, A_loan - (A_loan/commonTenure * i)); currentBalB = Math.max(0, B_loan - (B_loan/commonTenure * i)); } 
+                else { currentBalA = getBalanceAtMonth(A_loan, rateLoan, commonTenure, calcA.monthly + extraMonthly, i * 12); currentBalB = getBalanceAtMonth(B_loan, rateLoan, commonTenure, calcB.monthly, i * 12); }
+                let currentInvA = 0; let currentInvB = (analysisMode === 'deposit') ? B_startInvest : 0;
                 if (analysisMode === 'deposit') {
-                    for(let m=1; m <= i*12; m++) {
-                        currentInvA = currentInvA * (1 + monthlyRateAsb) + monthlySurplusA;
-                        if (method === 'reducing' && isAutoMatch && m > calcA.actualMonths) {
-                             currentInvA += (calcA.monthly + extraMonthly);
-                        }
-                    }
+                    for(let m=1; m <= i*12; m++) { currentInvA = currentInvA * (1 + monthlyRateAsb) + monthlySurplusA; if (method === 'reducing' && isAutoMatch && m > calcA.actualMonths) { currentInvA += (calcA.monthly + extraMonthly); } }
                     if(i > 0) currentInvB = B_startInvest * Math.pow(1 + rateAsb, i);
                 } else {
-                    let A_tenure = parseVal('shortTenure');
-                    if(A_tenure >= commonTenure) A_tenure = commonTenure - 1;
-                    
-                    let diff = monthlyPaymentA - monthlyPaymentB;
-                    
-                    for(let m=1; m <= i*12; m++) {
-                        currentInvA = currentInvA * (1 + monthlyRateAsb);
-                        if (m > A_tenure * 12) currentInvA += monthlyPaymentA;
-                        
-                        currentInvB = currentInvB * (1 + monthlyRateAsb);
-                        if (diff > 0) currentInvB += diff;
-                    }
+                    let A_tenure = parseVal('shortTenure'); if(A_tenure >= commonTenure) A_tenure = commonTenure - 1; let diff = monthlyPaymentA - monthlyPaymentB;
+                    for(let m=1; m <= i*12; m++) { currentInvA = currentInvA * (1 + monthlyRateAsb); if (m > A_tenure * 12) currentInvA += monthlyPaymentA; currentInvB = currentInvB * (1 + monthlyRateAsb); if (diff > 0) currentInvB += diff; }
                 }
-
-                let netWorthA = (P_asset - currentBalA) + currentInvA;
-                let netWorthB = (P_asset - currentBalB) + currentInvB;
-                let diffNet = netWorthB - netWorthA;
-
+                let netWorthA = (P_asset - currentBalA) + currentInvA; let netWorthB = (P_asset - currentBalB) + currentInvB; let diffNet = netWorthB - netWorthA;
                 csvContent += `${i},${currentBalA.toFixed(2)},${currentInvA.toFixed(2)},${netWorthA.toFixed(2)},${currentBalB.toFixed(2)},${currentInvB.toFixed(2)},${netWorthB.toFixed(2)},${diffNet.toFixed(2)}\n`;
             }
-
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "Laporan_Kewangan_Ultimate.csv");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            const encodedUri = encodeURI(csvContent); const link = document.createElement("a"); link.setAttribute("href", encodedUri); link.setAttribute("download", "Laporan_Kewangan_Ultimate.csv"); document.body.appendChild(link); link.click(); document.body.removeChild(link);
         }
 
         function getBalanceAtMonth(principal, ratePct, years, monthlyPayment, targetMonth) {
-            let r = ratePct / 100 / 12;
-            let balance = principal;
-            for(let m=0; m<targetMonth; m++) {
-                if(balance <= 0.1) return 0;
-                let interest = balance * r;
-                let principalPart = monthlyPayment - interest;
-                balance -= principalPart;
-            }
+            let r = ratePct / 100 / 12; let balance = principal;
+            for(let m=0; m<targetMonth; m++) { if(balance <= 0.1) return 0; let interest = balance * r; let principalPart = monthlyPayment - interest; balance -= principalPart; }
             return Math.max(0, balance);
         }
 
-        function downloadChart() {
-            const canvas = document.getElementById('financeChart');
-            const link = document.createElement('a');
-            link.download = 'Graf_Kewangan.png';
-            link.href = canvas.toDataURL();
-            link.click();
-        }
-
         window.onload = function() {
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
-            }
-            
+            if (typeof lucide !== 'undefined') lucide.createIcons();
             setLoanType('car'); 
             syncInput('assetPrice');
             syncInput('cashOnHand');
+            switchMainView('budget');
         };
 
     </script>
