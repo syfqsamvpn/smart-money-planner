@@ -147,14 +147,23 @@
                         <input type="range" min="0" max="200000" step="1000" value="30000" class="w-full mt-3 accent-emerald-500" oninput="document.getElementById('cashOnHand').value = this.value; syncInput('cashOnHand')">
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4 relative z-10">
+                    <div class="space-y-4 relative z-10">
                         <div>
                             <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Dividen ASB (%)</label>
                             <input type="number" id="asbRate" value="5.5" step="0.1" class="block w-full rounded-lg border-slate-200 bg-slate-50 border focus:bg-white focus:border-blue-500 focus:ring-blue-500 sm:text-sm py-2.5 px-3 transition-all number-font font-medium" oninput="calculate()">
                         </div>
+                        
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Min. Deposit (%)</label>
-                            <input type="number" id="minDepoPercent" value="10" class="block w-full rounded-lg border-slate-200 bg-slate-50 border focus:bg-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2.5 px-3 transition-all number-font font-medium" oninput="calculate()">
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Min. Deposit</label>
+                            <div class="relative">
+                                <input type="number" id="minDepoInput" value="10" class="block w-full rounded-lg border-slate-200 bg-slate-50 border focus:bg-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2.5 pl-3 pr-24 transition-all number-font font-medium" oninput="calculate()">
+                                <div class="absolute inset-y-0 right-1 flex items-center">
+                                    <div class="flex bg-slate-100 rounded-md p-1 scale-90">
+                                        <button onclick="setDepoMode('percent')" id="btn-depo-percent" class="px-2 py-0.5 text-[10px] font-bold rounded-md bg-white text-indigo-600 shadow-sm transition-all shadow-sm">%</button>
+                                        <button onclick="setDepoMode('amount')" id="btn-depo-amount" class="px-2 py-0.5 text-[10px] font-bold rounded-md text-slate-400 hover:text-slate-600 transition-all hover:bg-slate-200">RM</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -287,6 +296,7 @@
 
     <script>
         let currentLoanType = 'car'; 
+        let depositMode = 'percent'; // 'percent' atau 'amount'
         let chartInstance = null;
 
         const formatRM = (num) => {
@@ -326,6 +336,43 @@
             calculate();
         }
 
+        function setDepoMode(mode) {
+            if (mode === depositMode) return;
+
+            const P_asset = parseVal('assetPrice');
+            const input = document.getElementById('minDepoInput');
+            let currentVal = parseFloat(input.value) || 0;
+            
+            // Tukar nilai sedia ada kepada unit baru
+            if (mode === 'amount') {
+                // Dari % ke RM
+                input.value = (P_asset * (currentVal / 100)).toFixed(0);
+            } else {
+                // Dari RM ke %
+                if(P_asset > 0) {
+                    input.value = ((currentVal / P_asset) * 100).toFixed(1);
+                } else {
+                    input.value = 0;
+                }
+            }
+
+            depositMode = mode;
+
+            // Update butang UI
+            const btnPct = document.getElementById('btn-depo-percent');
+            const btnAmt = document.getElementById('btn-depo-amount');
+            
+            if (mode === 'percent') {
+                btnPct.className = "px-2 py-0.5 text-[10px] font-bold rounded-md bg-white text-indigo-600 shadow-sm transition-all";
+                btnAmt.className = "px-2 py-0.5 text-[10px] font-bold rounded-md text-slate-400 hover:text-slate-600 transition-all hover:bg-slate-200";
+            } else {
+                btnAmt.className = "px-2 py-0.5 text-[10px] font-bold rounded-md bg-white text-indigo-600 shadow-sm transition-all";
+                btnPct.className = "px-2 py-0.5 text-[10px] font-bold rounded-md text-slate-400 hover:text-slate-600 transition-all hover:bg-slate-200";
+            }
+
+            calculate();
+        }
+
         function calculate() {
             const P_asset = parseVal('assetPrice');
             const years = parseVal('loanTenure');
@@ -333,9 +380,19 @@
             const rateLoan = parseVal('loanRate') / 100;
             const cashTotal = parseVal('cashOnHand');
             const rateAsb = parseVal('asbRate') / 100;
-            const minDepoPct = parseVal('minDepoPercent') / 100;
+            
+            // Logic Min Deposit (Percent vs Amount)
+            const rawDepo = parseVal('minDepoInput');
+            let minDepoAmount = 0;
 
-            const minDepoAmount = P_asset * minDepoPct;
+            if (depositMode === 'percent') {
+                minDepoAmount = P_asset * (rawDepo / 100);
+            } else {
+                minDepoAmount = rawDepo;
+            }
+
+            // Validation supaya deposit tak lebih harga aset
+            if (minDepoAmount > P_asset) minDepoAmount = P_asset;
             
             let dp_A = cashTotal;
             if(dp_A < minDepoAmount) dp_A = minDepoAmount; 
